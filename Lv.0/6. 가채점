@@ -1,0 +1,31 @@
+[ 문제 ]
+// 성적을 문의하려는 학생들의 번호가 담긴 정수 리스트 numbers와 가채점한 점수가 성적을 문의하려는 학생 순서대로 담긴 정수 리스트 our_score, 실제 성적이 번호 순서대로 담긴 정수 리스트 score_list가 주어질 때, 올바르게 작동하도록 한 줄을 수정해라.
+//====================================================================
+
+[ 풀이 ]
+'''
+1. 입출력을 보면, 0부터 세는 인덱스와 numbers의 값이 일치하지 않는 걸 알 수 있음.
+  : 7라인이 점수를 비교하는 부분이므로 여길 수정해야 함.
+
+ 2. 나는 numbers[i] 값이 score_list에서의 인덱스 값보다 1 크다는 점을 이용했음.
+   ∴ score_list[numbers[i]-1]
+ //====================================================================
+
+[ 답안 ]
+class Solution {
+    public String[] solution(int[] numbers, int[] our_score, int[] score_list) {
+        int num_student = numbers.length;
+        String[] answer = new String[num_student];
+
+        for (int i = 0; i < num_student; i++) {
+            if (our_score[i] == score_list[numbers[i]-1]) { // 수정 위치
+                answer[i] = "Same";
+            }
+            else {
+                answer[i] = "Different";
+            }
+        }
+
+        return answer;
+    }
+}
