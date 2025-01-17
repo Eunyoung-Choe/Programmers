@@ -21,6 +21,8 @@ public class Solution {
     }
 }
 
+//====================================================================
+[ 메모 ]
 '''
 ※ Math.pow(밑, 지수)
 -> int b_square = (int) Math.pow(c, 2) - (int) Math.pow(a, 2);
