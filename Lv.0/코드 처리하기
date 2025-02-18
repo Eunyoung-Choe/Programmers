@@ -1,0 +1,153 @@
+[ 문제 ]
+'''
+• 입출력 예
+"abc1abc1abc"	-> "acbac"
+
+• 시작 mode=0, 문자열을 탐색하다 1이 나오면 mode=1로 전환. (1 나올 때마다 두 mode 전환 반복)
+  • mode=0: code[idx]가 "1"이 아니면 idx가 짝수일 때만 ret의 맨 뒤에 code[idx]를 추가
+  • mode=1: code[idx]가 "1"이 아니면 idx가 홀수일 때만 ret의 맨 뒤에 code[idx]를 추가
+
+• ret를 리턴하는 함수 작성
+• return 하려는 ret가 만약 빈 문자열이라면 대신 "EMPTY" return
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+'''
+class Solution {
+    public String solution(String code) {
+        
+        String ret = "";
+        int mode = 0; // mode는 0으로 시작
+         
+        for(int i=0; i<code.length(); i++){
+            // mode 전환
+            if(code.charAt(i)=='1') {
+                if(mode==0) { // ※ mode = 1 - mode;로 적었으면 mode 반전 더 효율적
+                    mode = 1;
+                    continue;
+                }
+                else {
+                    mode = 0;
+                    continue;
+                }
+            }
+            
+            // mode 별 ret 문자열 추가
+            if(mode==0 && i%2==0) {
+                // mode 0
+                ret += code.charAt(i);
+            }
+            else if(mode==1 && i%2==1) {
+                // mode 1
+                ret += code.charAt(i);
+            }                
+        }    
+
+        return ret.isEmpty() ? "EMPTY" : ret;
+    }
+}
+'''
+
+//=====================================================================
+
+[ 내 오답 풀이 ]
+// 1) '1'이 나오면 mode 전환은 되나, '1' 자체를 출력에서 제외하는 처리가 없어서 계속 결과에 1이 포함되어 출력됨.
+// -> mode 확인 코드가 먼저 나와야 함.
+class Solution {
+    public String solution(String code) {
+        String ret = code.charAt(0) + "";  // ""를 더해 양변이 String이 되도록.
+        int mode = 0; // mode는 0으로 시작
+        
+        for(int i=1; i<code.length()-1; i++){
+            
+            if(mode==0) {
+                // mode 0일 때
+                if(i%2==0)
+                    ret += code.charAt(i);
+            }
+            else {
+                // mode 1일 때
+                if(i%2==1)
+                    ret += code.charAt(i);
+            }           
+
+            // mode 전환
+            if(code.charAt(i+1)=='1') {
+                if(mode==0) {
+                    mode = 1;
+                    continue;
+                }
+                else {
+                    mode = 0;
+                    continue;
+                }
+            }
+        }    
+        return ret;
+    }
+}
+
+
+// 2) mode 코드를 앞으로 옮겼으나 테스트 중 실패 ==========================================
+// -> EMPTY의 경우를 놓침. ret에 무조건 첫 글자를 넣으면 X. 따라서 "" 빈 문자열로 시작해야 함.
+class Solution {
+    public String solution(String code) {
+        String ret = code.charAt(0) + "";
+        int mode = 0; // mode는 0으로 시작
+
+        for(int i=1; i<code.length(); i++){
+            // mode 전환
+            if(code.charAt(i)=='1') {
+                if(mode==0) {
+                    mode = 1;
+                    continue;
+                }
+                else {
+                    mode = 0;
+                    continue;
+                }
+            }
+
+            // mode 별 ret 문자열 추가
+            if(mode==0 && i%2==0) {
+                // mode 0
+                ret += code.charAt(i);
+            }
+            else if(mode==1 && i%2==1) {
+                // mode 1
+                ret += code.charAt(i);
+            }                
+        }    
+        return ret.isEmpty() ? "EMPTY" : ret;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+class Solution {
+    public String solution(String code) {
+        StringBuilder answer = new StringBuilder();
+        int mode = 0;
+        for (int i = 0; i < code.length(); i++) {
+            char current = code.charAt(i);
+            if (current == '1') {
+                mode = mode == 0 ? 1 : 0;
+                continue;
+            }
+
+            if (i % 2 == mode) {
+                answer.append(current);
+            }
+        }
+        return answer.length() == 0 ? "EMPTY" : answer.toString();
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+'''
+1. 조건에서 "1"로 적어서 Char와 String 간의 비교가 되어 오류 났었음. 
+2. isEmpty()
+3. 삼항 연산자 활용 
+'''
