@@ -1,0 +1,47 @@
+[ 문제 ]
+'''
+문자열 my_string과 정수 k가 주어질 때, my_string을 k번 반복한 문자열을 return 하는 solution 함수를 작성해 주세요.
+1 ≤ my_string의 길이 ≤ 100
+my_string은 영소문자로만 이루어져 있습니다.
+1 ≤ k ≤ 100
+
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public String solution(String my_string, int k) {
+        String answer = "";
+
+        for(int i=0; i<k; i++) {
+            answer += my_string;
+        }
+
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+class Solution {
+    public String solution(String my_string, int k) {
+        return my_string.repeat(k); // .repeat(반복횟수)
+    }
+}
+
+[ 타 풀이 2 ]
+class Solution {
+    public String solution(String my_string, int k) {
+        StringBuilder sb = new StringBuilder(); // StringBuilder 객체 생성
+        for (int i=0; i<k; i++) {
+            sb.append(my_string);
+        }
+        return sb.toString();
+    }
+}
+
+//=====================================================================
+
+[ 메모 ]
+1. 내 풀이에선 answer를 업데이트 하고 있는데, String이 불변 객체라 새로운 문자열 객체를 계속 생성하는 거라 비효율적임. 그래서 나온 게 StringBuilder임.
+  StringBuilder는 내부에서 문자열을 수정 가능하도록 저장하고, 문자열을 덧붙이거나 수정해도 새로운 객체를 만들지 않음.
