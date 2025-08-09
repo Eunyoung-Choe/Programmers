@@ -1,0 +1,61 @@
+[ 문제 ]
+'''
+문자열에 따라 다음과 같이 두 수의 크기를 비교하려고 합니다.
+두 수가 n과 m이라면
+">", "=" : n >= m
+"<", "=" : n <= m
+">", "!" : n > m
+"<", "!" : n < m
+두 문자열 ineq와 eq가 주어집니다. ineq는 "<"와 ">"중 하나고, eq는 "="와 "!"중 하나입니다. 그리고 두 정수 n과 m이 주어질 때, n과 m이 ineq와 eq의 조건에 맞으면 1을 아니면 0을 return하도록 solution 함수를 완성해주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+  public int solution(String ineq, String eq, int n, int m) {
+      int answer = 0;
+      
+      if(ineq.equals(">")) { // 조건부를 ==으로 써서 오류 났었음.
+          if(eq.equals("="))
+             answer = (n >= m) ? 1 : 0;
+          else
+              answer = (n > m) ? 1 : 0;
+      }
+      
+      if(ineq.equals("<")) {
+          if(eq.equals("="))
+              answer = (n <= m) ? 1 : 0;
+          else
+              answer = (n < m) ? 1 : 0;
+      }
+      return answer;
+  }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+Map<String, BiFunction<Integer, Integer, Boolean>> functions = Map.of(
+      ">=", (a, b) -> a >= b,
+      "<=", (a, b) -> a <= b,
+      ">!", (a, b) -> a > b,
+      "<!", (a, b) -> a < b
+);
+return functions.get(ineq + eq).apply(n, m) ? 1 : 0;
+
+// 왼쪽 Map<>은 어떤 타입을 쓸 건지 Map 자체를 정의한 것. Map.of()는 실제로 Map 객체를 생성하고 그 안에 여러 개의 키-값을 넣음.
+// BiFunction<입력1,입력2,반환값>은 함수형 인터페이스로, 두 개의 입력값을 받아서 하나의 결과를 반환함.
+// 여기서는 BiFunction<Integer, Integer, Boolean> 즉, 정수 2개를 받아서 참/거짓을 반환하겠다는 것.
+
+
+[ 타 풀이 2 ]
+return (">".equals(ineq) ? n > m : n < m) || ("=".equals(eq) ? n == m : false) ? 1 : 0;
+
+//=====================================================================
+
+[ 메모 ]
+1. 자바에서 ==는 문자열 내용 비교가 아니라 참조(메모리 주소) 비교를 함!
+  그래서 ineq에 실제로 ">"라는 문자열이 들어 있어도 메모리 주소가 다르면 == 결과가 false가 됨.
+  문자열 비교는 .equals().
+  위에서 ==으로 쓰면 ineq변수에 들어있는 String 객체의 참조값(주소)이 ">"라는 리터럴의 참조값과 같은가?가 됨.
+
+2. Map<키,값> -> 키와 값 한 쌍 형태로 데이터를 저장하는 자료구조. 값은 중복되어도 키는 중복되면 안 됨.
