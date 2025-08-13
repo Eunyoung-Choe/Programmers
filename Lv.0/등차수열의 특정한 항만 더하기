@@ -1,0 +1,58 @@
+[ 문제 ]
+'''
+두 정수 a, d와 길이가 n인 boolean 배열 included가 주어집니다. 
+첫째항이 a, 공차가 d인 등차수열에서 included[i]가 i + 1항을 의미할 때, 이 등차수열의 1항부터 n항까지 included가 true인 항들만 더한 값을 return 하는 solution 함수를 작성해 주세요.
+a	d	included	                        result
+3	4	[true, false, false, true, true]	37
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public int solution(int a, int d, boolean[] included) {
+        int answer = 0;
+
+        for(int i=0; i<included.length; i++) {
+            if(included[i]==true)  // 또 ==true를 써야 하나 말아야 하나 헷갈렸다-_-;; 
+                answer += a;
+            a += d;  // 나차럼 쓴 사람들이 많긴 많았다.
+        }
+        return answer; 
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+for(int i = 0; i < included.length; i++){
+    if(included[i]){  // 어차피 참일 때에만 실행되니까.
+        answer +=  a + (d*i);
+    }
+}
+
+[ 타 풀이 2 ]
+class Solution {
+    public int solution(int a, int d, boolean[] included) {
+        return IntStream.range(0, included.length).map(idx -> included[idx] ? a+(idx*d) : 0).sum();
+    }
+}
+// Stream API
+// 여기서 .map()은 스트림의 각 요소를 다른 값으로 변환하는 메서드. 각 인덱스마다 a+(idx*d) 또는 0으로 변환한다는 것.
+//=====================================================================
+
+[ 메모 ]
+1. Stream API: 배열, 컬렉션, 숫자 범위 등 데이터 집합을 '반복문 없이' 선언형 스타일로 처리하게 하는 기능
+  보통 Steam<T>처럼 제네릭으로 객체를 다루지만, 기본형은 이걸로 처리하면 박싱/언박싱 비용이 생김. 
+  그래서 기본형 전용으로 IntStream, LongStream, DoubleStream이 따로 있는 거라고.
+  
+  ※ 제네릭은 객체 타입만 받을 수 있어 기본형들은 그대로 제네릭에 못 넣음. Stream<int> 불가능, Stream<Integer> 가능.
+  Boxing은 기본형을 래버 클래스 객체로 변환하는 건데, 대량 데이터 처리에선 이게 누적되면 꽤 느려짐.
+
+  IntStream.range(0,included.length) -> 0부터 length-1까지의 int값들을 순서대로 만드는 스트림
+  Ex) IntStream.range(0, 5) → 0, 1, 2, 3, 4
+
+2. map은 Stream API의 중간 연산이라서 스트림이 있어야 쓸 수 있는 메서드임.
+  근데 map()은 중간 연산으로, 호출 직후 리스트나 배열을 만들지는 않음. 요소 하나를 반환하자마자 sum() 계산하고 버림.
+
+3. -> 형태는 '람다식'. 
+  (매개변수) -> (실행할 코드)
+  
