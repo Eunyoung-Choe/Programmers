@@ -1,0 +1,65 @@
+[ 문제 ]
+'''
+정수가 담긴 리스트 num_list가 주어집니다. 
+num_list의 홀수만 순서대로 이어 붙인 수와 짝수만 순서대로 이어 붙인 수의 합을 return하도록 solution 함수를 완성해주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public int solution(int[] num_list) {
+        int answer = 0;
+        String even = ""; // 처음에 ''라고 썼다가 오류남. ''는 문자, ""이 문자열!
+        String odd = "";
+        
+        for(int i=0; i<num_list.length; i++) { // 또 for(int i:num_list) 형태 기억 못했다..!
+            if(num_list[i]%2==0)
+                even += String.valueOf(num_list[i]);
+            else
+                odd += String.valueOf(num_list[i]);
+        }
+        answer = Integer.parseInt(even) + Integer.parseInt(odd);
+        
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+int answer = 0;
+int even = 0;
+int odd = 0;
+
+for(int num : num_list) {
+    if(num % 2 == 0) {
+        even *= 10; // 매번 10을 곱함으로써 자릿수를 한 칸 미는 거임!
+        even += num;
+    } else {
+        odd *= 10;
+        odd += num;
+    }
+}
+answer = even + odd;
+return answer;
+
+[ 타 풀이 2 ]
+StringBuilder a = new StringBuilder(); // StringBuilder는 객체를 만들어 써야 함.
+StringBuilder b = new StringBuilder();
+
+for (int num : num_list) {
+    (num % 2 == 0 ? a : b).append(num);
+}
+return Integer.parseInt(a.toString()) + Integer.parseInt(b.toString());
+//=====================================================================
+
+[ 메모 ]
+1. StringBuilder: 문자열을 효율적으로 이어 붙이고 수정할 수 있는 클래스
+  String은 불변이라 한 번 생성하면 내부 값이 바뀌지 않음. 따라서 +로 문자열을 계속 붙이면 매번 새로운 String 객체가 만들어지는 것임. 즉, 메모리 낭비 발생.
+
+  이 문제를 해결하기 위해 StringBuilder가 만들어짐. 내부적으로는 가변(mutable) 배열을 쓰기 때문에 문자열 이어붙이기가 훨씬 빠르고 효율적.
+
+  ※ StringBuilder는 String이 아닌 문자열을 담고 있는 버퍼 객체라서 문자열로 쓰고 싶으면 변환이 필요함.
+  String ex = sb.toString();
+
+2. append()는 StringBuilder의 메서드임. 문자열, 숫자, 문자 등을 뒤에 이어 붙이는 기능.
+  
