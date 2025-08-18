@@ -1,0 +1,48 @@
+[ 문제 ]
+'''
+정수 리스트 num_list가 주어질 때, 마지막 원소가 그전 원소보다 크면 마지막 원소에서 그전 원소를 뺀 값을 
+마지막 원소가 그전 원소보다 크지 않다면 마지막 원소를 두 배한 값을 추가하여 return하도록 solution 함수를 완성해주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public int[] solution(int[] num_list) {
+        // 끝자리 추가 요소
+        int last =
+            num_list[num_list.length-1] > num_list[num_list.length-2] ? num_list[num_list.length-1]-num_list[num_list.length-2] : num_list[num_list.length-1]*2;
+        
+        // 새로운 배열 생성
+        int[] newArr = new int[num_list.length+1];
+        System.arraycopy(num_list,0,newArr,0,num_list.length);
+        
+        newArr[newArr.length-1] = last;
+        return newArr;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+int[] answer = new int[num_list.length+1];
+
+for(int i=0; i<num_list.length; i++){
+    answer[i] = num_list[i]; // 반복문으로 answer배열에 값을 채운 게 신박했다.
+}
+answer[num_list.length] = num_list[num_list.length-1] > num_list[num_list.length-2] ? num_list[num_list.length-1]-num_list[num_list.length-2]:num_list[num_list.length-1]*2;
+
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. 우선 기억해야 할 점은, 자바에서 배열은 수정이 안 된다는 것. 그렇기에 다양한 메서드가 존재함.
+  '배열'은 길이가 '고정'! 따라서 새 배열을 만들어 복사하거나 컬렉션을 사용해야 함.
+
+  System.arraycopy(원본배열,원본배열에서 시작할 위치,복사대상배열, 대상 배열에서 붙여넣기 시작할 위치, 복사할 개수)
+  : 자바의 배열 복사 메서드. 원하는 배열 범위를 다른 배열에 복사할 수 있음.
+  : Arrays.copyOf보다 더 유연하게 시작 위치와 복사 길이를 지정 가능.
+
+2. Arrays.copyOf(원본배열, 새로운 배열의 길이)
+  : 클래스에 있는 배열 복사 메서드. 원래 배열을 복사해 새로운 배열을 만듦.
+
+  위 2가지의 차이점은 System.arraycopy는 대상 배열에 직접 복사하여 리턴값이 없음. Arrays.copyOf는 새 배열을 리턴함.
+  또한 전자는 범위를 더 세밀하게 지정, 후자는 항상 원본 배열의 앞에서부터 복사함.
