@@ -1,0 +1,55 @@
+[ 문제 ]
+'''
+정수 배열 numLog가 주어집니다. 처음에 numLog[0]에서 부터 시작해 "w", "a", "s", "d"로 이루어진 문자열을 입력으로 받아 순서대로 다음과 같은 조작을 했다고 합시다.
+"w" : 수에 1을 더한다.
+"s" : 수에 1을 뺀다.
+"d" : 수에 10을 더한다.
+"a" : 수에 10을 뺀다.
+그리고 매번 조작을 할 때마다 결괏값을 기록한 정수 배열이 numLog입니다. 즉, numLog[i]는 numLog[0]로부터 총 i번의 조작을 가한 결과가 저장되어 있습니다.
+주어진 정수 배열 numLog에 대해 조작을 위해 입력받은 문자열을 return 하는 solution 함수를 완성해 주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public String solution(int[] numLog) { // 이 줄에서 'String'타입 반환인 걸 확인!!
+        StringBuilder answer = new StringBuilder();
+        
+        // 다음 인덱스 - 이전 인덱스 값 차에 따라 알파벳 부여
+        // String을 계속 업데이트 하게 됨
+        for(int i=0; i<numLog.length-1; i++) { // 범위 주의
+            int minus = numLog[i+1] - numLog[i];
+            
+            switch(minus) {
+                case 1:
+                    answer.append("w"); break;
+                case -1:
+                    answer.append("s"); break;
+                case 10:
+                    answer.append("d"); break;
+                case -10:
+                    answer.append("a"); break;
+            }
+        }
+        return answer.toString(); // 따라서 여기서 toString()을 안 쓰면 타입 불일치 에러 발생
+    }
+}
+//=====================================================================
+.
+[ 타 풀이 1 ]
+String answer = "";
+
+for(int i=1; i<numLog.length; i++){
+    int j = numLog[i-1] - numLog[i];
+    switch(j){
+        case -1 : answer+='w'; break;
+        case 1 : answer+='s'; break;
+        case -10 : answer+='d'; break;
+        case 10 : answer+='a'; break;
+    }
+}
+return answer; // 이 방식은 매번 새로운 String 객체 생성 
+
+
+2. append()는 StringBuilder의 메서드임. 문자열, 숫자, 문자 등을 뒤에 이어 붙이는 기능.
+  
