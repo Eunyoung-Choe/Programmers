@@ -1,0 +1,52 @@
+[ 문제 ]
+'''
+정수 start_num와 end_num가 주어질 때, start_num부터 end_num까지의 숫자를 차례로 담은 리스트를 return하도록 solution 함수를 완성해주세요.
+start_num 	end_num	   result
+3	          10	       [3, 4, 5, 6, 7, 8, 9, 10]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public int[] solution(int start_num, int end_num) {
+        List<Integer> list = new ArrayList<>();
+        
+        for(int i=start_num; i<=end_num; i++) {
+            list.add(i);
+        }
+        // int[] 배열로 변환
+        int[] answer = list.stream().mapToInt(Integer::intValue).toArray();
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+return IntStream.rangeClosed(start, end).toArray();
+// 하..한 줄...?
+// range(start, end)는 end 미포함, rangeClosed(start, end)는 end까지 포함
+
+[ 타 풀이 2 ]
+int[] answer = new int[end - start+1]; // 크기가 정해진 배열을 생성하여
+for(int i =0; i<= end - start; i++) {
+    answer[i] = start + i; // 그 안에 값을 넣음.
+}
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. ArrayList: 고정 배열이 아닌 가변 크기 자료구조
+  Arrays.copyOf나 System.arraycopy도 있지만 이 문제에선 굳이 싶었던.
+
+2. int[] 반환 클래스니까 배열로 변환하는 줄을 씀.
+  list.stream(): list라는 ArrayList<Integer>에서 Stream을 생성함. Stream은 데이터를 '흐름'처럼 다룰 수 있게 하는 API로, 반복문 없이도 map, filter, reduce 등을 활용할 수 있음.
+  .mapToInt(Integer::intValue)에서 괄호 안 표현은 메서드 참조 문법으로, x->x.intValue와 같음.
+  (각 Integer를 int로 바꿔주는 과정)
+
+  list가 이미 배열인 거 아닌가? 왜 toArray()로 배열 변환을 또 하지?
+  : list는 ArrayList<Integer> 즉 컬렉션이지, 배열이 아님.
+  참고로 위처럼 변환하지 않으면 list.get(i)와 같이 for문으로 직접 변환하는 방법도 있음.
+
+3. IntStream: 기본형 int 전용 스트림 (박싱/언박싱 없이 더 효율적으로 int 데이터를 다룸.)
+  IntStream.rangeClosed(): 연속된 정수 스트림 생성
