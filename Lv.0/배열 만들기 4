@@ -1,0 +1,62 @@
+[ 문제 ]
+'''
+왜 이렇게 하루 종일 걸렸지....?
+
+정수 배열 arr가 주어집니다. arr를 이용해 새로운 배열 stk를 만드려고 합니다.
+변수 i를 만들어 초기값을 0으로 설정한 후 i가 arr의 길이보다 작으면 다음 작업을 반복합니다.
+만약 stk가 빈 배열이라면 arr[i]를 stk에 추가하고 i에 1을 더합니다.
+stk에 원소가 있고, stk의 마지막 원소가 arr[i]보다 작으면 arr[i]를 stk의 뒤에 추가하고 i에 1을 더합니다.
+stk에 원소가 있는데 stk의 마지막 원소가 arr[i]보다 크거나 같으면 stk의 마지막 원소를 stk에서 제거합니다.
+위 작업을 마친 후 만들어진 stk를 return 하는 solution 함수를 완성해 주세요.
+arr	               result
+[1, 4, 2, 5, 3]	   [1, 2, 3]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public int[] solution(int[] arr) {
+        List<Integer> stk = new ArrayList<>();
+        int i = 0;
+        // GPT에게 수정을 받았다.
+        while(i < arr.length) {
+            if(stk.isEmpty() || stk.get(stk.size()-1)<arr[i]) {
+                stk.add(arr[i]);
+                i++;
+            } else {
+                stk.remove(stk.size()-1); // 요소 제거하는 메서드!
+            }
+        }
+        
+        int[] answer = stk.stream().mapToInt(Integer::intValue).toArray();
+        return answer;    
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+Stack<Integer> stack = new Stack<>(); // Stack 자료구조 (후입선출)
+
+for (int num : arr) {
+    while (!stack.isEmpty() && num <= stack.peek()) //peek(): 스택 맨 위 요소 확인
+        stack.pop();
+    stack.push(num);
+}
+
+return stack.stream().mapToInt(i -> i).toArray();
+// 스택을 쓰면 바로 마지막 값이 확인되니까!
+//=====================================================================
+
+[ 메모 ]
+1. 처음에는 IntStream, toArray()를 쓰려고 했는데 일단 IntStream 자체가 배열이 아니고, toArray()를 쓴다 해도 '일반 배열'임. 즉, 크기가 고정된다는 말.
+
+2. 배열 뒤에서부터 요소를 선택하는 메서드는 없음.
+
+3. 처음에 stk.length를 썼었는데, List<Integer> stk = new ArrayList<>();가 배열이 아닌 '리스트'이므로 .length를 못 씀.
+  리스트의 길이는 .size()임!!
+
+  stk.remove(stk.size()-1): 인덱스 제거
+  stk.remove(stk.get(stk.size()-1)): 인덱스에 해당하는 값 제거
+
+  근데 stk.remove(Integer.valueOf(5)) 이런 식으로 적으면 '처음 나오는' 5를 제거하는 거임.
