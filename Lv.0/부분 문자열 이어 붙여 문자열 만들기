@@ -1,0 +1,41 @@
+[ 문제 ]
+'''
+길이가 같은 문자열 배열 my_strings와 이차원 정수 배열 parts가 매개변수로 주어집니다. parts[i]는 [s, e] 형태로, my_string[i]의 인덱스 s부터 인덱스 e까지의 부분 문자열을 의미합니다. 
+각 my_strings의 원소의 parts에 해당하는 부분 문자열을 순서대로 이어 붙인 문자열을 return 하는 solution 함수를 작성해 주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public String solution(String[] my_strings, int[][] parts) {
+        StringBuilder answer = new StringBuilder();
+        
+        // parts만 반복하면 my_strings를 반복 못 함.
+        for(int i=0; i<parts.length; i++) {
+            int s = parts[i][0];
+            int e = parts[i][1]; // 왜 s,e 지정할 생각을 못 했지;;
+            
+            answer.append(my_strings[i].substring(s,e+1));
+        }
+        return answer.toString();
+    }
+}
+==========================================================
+
+[ 타 풀이 ]
+StringBuffer answer = new StringBuffer();
+
+for(int idx=0; idx<my_strings.length; idx++) {
+    answer.append(my_strings[idx].substring(parts[idx][0], parts[idx][1]+1));
+}
+return answer.toString();
+//=====================================================================
+
+[ 메모 ]
+1. StringBuffer도 String이 불변이라 가변 문자열을 쓰기 위해 존재하는 건데,
+  StringBuilder와 다른 점은 '멀티스레드' 환경에서 안전하다는 것. 
+  (StringBuilder는 싱글스레드에서만 안전)
+
+2. 다른 사람 풀이를 보는데 stream 자체가 단순 반복문보다 처리 속도가 떨어진다고 한다.
+  DB와 같이 사용하는 경우 외에는 추천을 안 한다고. mapTo도 성능이 매우 딸린다고 함.
