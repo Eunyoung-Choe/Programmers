@@ -1,0 +1,39 @@
+[ 문제 ]
+'''
+어떤 문자열에 대해서 접미사는 특정 인덱스부터 시작하는 문자열을 의미합니다. 
+예를 들어, "banana"의 모든 접미사는 "banana", "anana", "nana", "ana", "na", "a"입니다.
+문자열 my_string과 is_suffix가 주어질 때, is_suffix가 my_string의 접미사라면 1을, 
+아니면 0을 return 하는 solution 함수를 작성해 주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public int solution(String my_string, String is_suffix) {
+        int answer = 0;
+        int my_len = my_string.length();
+        String[] arr = new String[my_len];
+        
+        for(int i=0; i<my_len; i++) {
+            arr[i] = my_string.substring(i); 
+            if (arr[i].equals(is_suffix)) { // ==으로 연산자를 잘못 썼었음.
+                answer = 1;
+                break;
+            }
+        }
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+return myString.endsWith(isSuffix) ? 1 : 0;
+//=====================================================================
+
+[ 메모 ]
+1. .equals(): 문자열 '내용'이 같은지를 비교함.
+  ==을 쓰면 문자열의 '주소(참조)'를 비교하는 거라 내용이 같아도 다르다고 판단할 수 있음.
+
+2. endsWith(String suffix): 문자열이 특정 접미사(suffix)로 끝나는지 확인함. 
+  맞으면 true, 아니면 false 반환.
+  그렇다고 모든 접미사를 비교하는 건 아니고 한 번의 호출로 한 개의 접미사를 비교하는 거임.
