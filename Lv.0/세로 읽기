@@ -1,0 +1,42 @@
+[ 문제 ]
+'''
+문자열 my_string과 두 정수 m, c가 주어집니다. my_string을 한 줄에 m 글자씩 가로로 적었을 때 
+왼쪽부터 세로로 c번째 열에 적힌 글자들을 문자열로 return 하는 solution 함수를 작성해 주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public String solution(String my_string, int m, int c) {
+        int rows = my_string.length()/m;
+        int cols = m;
+        char[] arr = my_string.toCharArray(); // 원본 String 배열화
+        char[][] matrix = new char[rows][cols]; // 배열 크기 바꿀 거
+                    
+        // 만든 배열에 문자 넣기
+        for(int i=0; i<arr.length; i++) {
+            matrix[i/cols][i%cols] = arr[i]; // [0][0], [0][1]...
+        }
+        
+        // return 문자열 저장
+        StringBuilder answer = new StringBuilder();
+        
+        for(int i=0; i<rows; i++) {
+            answer.append(matrix[i][c-1]); // c가 1부터 시작인 걸 놓쳐서 오류 났었음.
+        }
+        
+        return answer.toString();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+String answer = "";
+for (int i = c - 1; i < my_string.length(); i += m) { // c-1에서 시작
+    answer += my_string.charAt(i); // 문자열을 m칸씩 뛰어가며 저장시킴.
+}
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. 2차원 배열에 문자 넣는 게 어려워서 GPT 도움을 받음. 저렇게 나눗셈을 써서 넣는다는 점 기억.
