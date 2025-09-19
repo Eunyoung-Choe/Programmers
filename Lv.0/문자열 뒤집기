@@ -1,0 +1,51 @@
+[ 문제 ]
+'''
+문자열 my_string과 정수 s, e가 매개변수로 주어질 때, my_string에서 
+인덱스 s부터 인덱스 e까지를 뒤집은 문자열을 return 하는 solution 함수를 작성해 주세요.
+my_string	          s	  e	    result
+"Progra21Sremm3"	  6	  12	  "ProgrammerS123"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public String solution(String my_string, int s, int e) {
+        StringBuilder myString = new StringBuilder(my_string);
+        StringBuilder answer = new StringBuilder(my_string.substring(s, e+1)); // 뒤집을 문자열만 저장된 거임
+        
+        // .replace()는 StringBuilder의 메서드임.
+        return myString.replace(s, e+1, answer.reverse().toString()).toString();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+// GPT
+StringBuilder sb = new StringBuilder(my_string.substring(0, s)); // 앞부분 미리 넣기
+sb.insert(sb.length(), new StringBuilder(my_string.substring(s, e+1)).reverse()); // 중간 삽입
+sb.insert(sb.length(), my_string.substring(e+1)); // 뒷부분 삽입
+return sb.toString();
+
+[ 타 풀이 2 ]
+// swap (원소 교환) 방식
+char[] arr = my_string.toCharArray();
+while (s < e) {
+    char temp = arr[s]; 
+    arr[s++] = arr[e]; // 후위연산자
+    arr[e--] = temp; 
+}
+return new String(arr);
+// s++을 정확히 이해하지 못해 헷갈린 풀이. 
+// s++이니까 마지막 문자를 arr[s]에 넣은 '후에' s값을 1 증가시키는 거임.
+//=====================================================================
+
+[ 메모 ]
+1. .replace()는 StringBuilder의 메서드. 세 번째 인자가 String타입이어야 한다는 점!!
+  substring()과 마찬가지로 끝 인덱스 포함 X.
+
+2. 뒤집을 부분을 
+  String reversed = new StringBuilder(my_string.substring(s, e+1)).reverse().toString();
+  이렇게 선언하는 게 더 깔끔한 듯. toString()이라 어쨌든 String을 저장한 거임.
+
+3. .insert(인덱스, 문자열): StringBuilder에서 기존 문자열을 뒤로 밀고 새 문자열을 넣음.
+
