@@ -1,0 +1,38 @@
+[ 문제 ]
+'''
+두 정수 q, r과 문자열 code가 주어질 때, code의 각 인덱스를 q로 나누었을 때 나머지가 r인 위치의 문자를 
+앞에서부터 순서대로 이어 붙인 문자열을 return 하는 solution 함수를 작성해 주세요.
+q	r	  code	              result
+3	1	  "qjnwezgrpirldywt"	"jerry"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public String solution(int q, int r, String code) {
+        StringBuilder answer = new StringBuilder();
+        
+        // code에서 선택되는 인덱스는 index*q+r
+        for(int i=0; i*q+r<code.length(); i++) { // 범위 조건에 대한 고정관념으로 헤맴;;
+            answer.append(code.charAt(i*q+r)); // charAt으로 해당 인덱스의 문자 선택
+        }
+        return answer.toString();
+    }
+}
+// 항상 i<범위 이렇게 써서 이 i를 바꿀 생각을 전혀 못 했음;;;
+//=====================================================================
+
+[ 타 풀이 1 ]
+StringBuilder sb = new StringBuilder();
+
+for (int i = r; i < code.length(); i += q) // 스타트와 건너뛰는 조건부를 건드렸다는 점!!
+    sb.append(code.charAt(i));
+
+return sb.toString();
+//=====================================================================
+
+[ 메모 ]
+1. 반복문의 조건부를 쓸 때 고정된 생각에서 벗어나자...!!
+
+2. String도, StringBuilder도 string[i] 형태로 문자를 지정할 수 없음.
+  인덱스로 선택하는 건 '배열'의 기능임. 그래서 charAt()을 사용하는 것.
