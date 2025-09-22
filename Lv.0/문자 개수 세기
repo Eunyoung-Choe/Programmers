@@ -1,0 +1,41 @@
+[ 문제 ]
+'''
+알파벳 대소문자로만 이루어진 문자열 my_string이 주어질 때, 
+my_string에서 'A'의 개수, my_string에서 'B'의 개수,..., my_string에서 'Z'의 개수, my_string에서 'a'의 개수, my_string에서 'b'의 개수,
+..., my_string에서 'z'의 개수를 순서대로 담은 길이 52의 정수 배열을 return 하는 solution 함수를 작성해 주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public int[] solution(String my_string) {
+        int[] answer = new int[52]; // int[]는 기본적으로 0 초기화!
+        
+        // 'A' -> index[0]
+        // 'B' -> index[1] 
+        // 각 자리 문자 - 'A' = 해당 인덱스 자리
+        for(char ch : my_string.toCharArray()) {
+            int index = (ch <= 'Z') ? ch-'A' : ch-'a'+26; // 이렇게 조건 따로 줘야 함.
+            answer[index] += 1;
+        }
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+// 미친 건가ㅋㅋㅋㅋ
+int[] answer = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+for(char ch: my_string.toCharArray()) {
+    answer[ch - 'A' - (Character.isLowerCase(ch)?6:0)]++; // 소문자를 선택하는 메서드가 있었다!
+}
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. 처음에 내 풀이 쓸 때 소문자 아스키 코드 시작점을 잘못 알고 있어 틀렸었음.
+  'A'=65, 'a'=97 이라서 'a' 조건을 따로 주어야 함!
+
+2. Character.isLowerCase(): 문자가 소문자이면 true, 아니면 false
+  반대 메서드는 isUpperCase()임.
