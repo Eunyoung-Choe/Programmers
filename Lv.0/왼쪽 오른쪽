@@ -1,0 +1,67 @@
+[ 문제 ]
+'''
+문자열 리스트 str_list에는 "u", "d", "l", "r" 네 개의 문자열이 여러 개 저장되어 있습니다. 
+str_list에서 "l"과 "r" 중 먼저 나오는 문자열이 "l"이라면 해당 문자열을 기준으로 왼쪽에 있는 문자열들을 순서대로 담은 리스트를, 
+먼저 나오는 문자열이 "r"이라면 해당 문자열을 기준으로 오른쪽에 있는 문자열들을 순서대로 담은 리스트를 return하도록 solution 함수를 완성해주세요. 
+"l"이나 "r"이 없다면 빈 리스트를 return합니다.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 삼항연산자로도 풀어보려고 했으나 실패......
+import java.util.*;
+class Solution {
+    public String[] solution(String[] str_list) {
+        
+        // l이면 왼쪽, r이면 오른쪽
+        for(int i=0; i<str_list.length; i++) {
+            if(str_list[i].equals("l")) { // 조건 왜자꾸 잘못쓰냐!!!!
+                return Arrays.copyOfRange(str_list,0, i); // 인자 3개임.
+            }
+            else if(str_list[i].equals("r")) {
+                return Arrays.copyOfRange(str_list, i+1, str_list.length);
+            }
+        }
+        return new String[0]; // for문에서 return이 보장되지 않는 모든 경우를 우려해 이렇게 작성 필요
+        // ============================================================
+        // 삼항연산자는 값 '대입' 시에만 사용 가능 (return이나 변수 선언 불가)
+//         for(int i=0; i<str_list.length; i++) {
+//             String str = str_list[i];
+//             String[] copy = (str.equals("l")||str.equals("r")) ? new Arrays.copyOf(str_list, str_list.length) : new String[0];
+//         }
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
+class Solution {
+    public String[] solution(String[] str_list) {
+        return IntStream.range(0, str_list.length)
+                .boxed()
+                .filter(i -> str_list[i].equals("l") || str_list[i].equals("r"))
+                .findFirst()
+                .map(i -> {
+                    if (str_list[i].equals("l")) {
+                        return Arrays.copyOfRange(str_list, 0, i);
+                    }
+                    return Arrays.copyOfRange(str_list, i + 1, str_list.length);
+                })
+                .orElseGet(() -> new String[]{});
+    }
+}
+// .orElseGet(): 이전 단계에서 값이 없을 때 실행하는 코드를 지정하는 메서드
+                  orElse()와 비슷하지만 orElseGet()은 람다식으로 값을 생성함.
+//=====================================================================
+
+[ 메모 ]
+1. 문자가 같은지를 비교하는 건 .equals()!!! ==은 '주소'가 같은지 비교하니까!!
+
+2. return이 조건문에만 있으면 런타임 에러. 반드시 보장되는 return이 있어야 함.
+
+3. new String[] -> 문법 오류
+  new String[0] 또는 new String[]{}이 맞는 형태.
+
+4. Optional: 값이 있을 수도, 없을 수도 있는 상황을 '객체'로 감싸 안전하게 처리할 수 있게 하는 클래스
