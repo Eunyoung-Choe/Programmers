@@ -1,0 +1,64 @@
+[ 문제 ]
+'''
+오늘 해야 할 일이 담긴 문자열 배열 todo_list와 각각의 일을 지금 마쳤는지를 나타내는 boolean 배열 finished가 매개변수로 주어질 때, 
+todo_list에서 아직 마치지 못한 일들을 순서대로 담은 문자열 배열을 return 하는 solution 함수를 작성해 주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public String[] solution(String[] todo_list, boolean[] finished) {
+        List<String> answer = new ArrayList<String>(); // () 까먹지 말기
+        
+        for(int i=0; i<finished.length; i++) {
+            if(!finished[i]) {
+                answer.add(todo_list[i]);
+            }
+        }
+        
+        return answer.toArray(new String[0]); // 리스트 크기에 맞춰 자동으로 새로운 배열 생성
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+// 완전 대단한 풀이...ㄷㄷ 다만 이건 계속 새로운 string을 생성하는 거니 StringBuilder를 추천한다고.
+String str = "";
+for(int i=0; i<finished.length; i++){
+    str = finished[i]==false ? str + todo_list[i] + "," : str; // false인 것만 문자열로 이어붙임.
+}
+
+return str.split(","); // "단어1,단어2,단어3,..." 형태가 된 걸 ,을 기준으로 배열로 반환.
+
+[ 타 풀이 2 ]
+return IntStream.range(0, finished.length)
+      .filter(i -> !finished[i]).mapToObj(i -> todo_list[i])
+      .toArray(String[]::new);
+// 중간의 mapToObj()는 무엇인가?
+// 일단 IntStream은 int를 연속 생성하는 스트림임. Integer 아니고, int.
+// 이제 todo_list[i]처럼 인덱스를 이용해 문자열을 뽑아야 하는데 IntStream은 숫자 스트림이라 .map()을 쓰면 계속 int 결과만 다룰 수 있다고 함.
+// 따라서 문자열 반환이 가능하려면 기본형 스트림 int를 Stream<String>으로 바꾸는 게 필요.
+// → 그걸 해주는 것이 mapToObj()인 것이다~
+//=====================================================================
+
+[ 메모 ]
+1. List 선언할 때 <>() 괄호 까먹지 말 것!!
+
+2. String 리스트는 toArray()만 쓰면 되니 배열 변환이 간단했음. 
+  그 이유는 String 자체가 참조형(객체)이니까 리스트 내부 구조에 맞기 때문. (기본형은 <>에 못 넣음.)
+  
+  이전에 Integer 리스트 때 배열 변환 코드가 길었던 이유는 '기본형 int'로 변환을 해야해서임.
+  map()을 쓴 이유는 중간 변환 과정이 필요해서이지, 그게 아니라면 필요없음!
+
+3. toArray(new String[0]): 리스트 변환하는 건데 왜 배열을 다시 선언하지?
+  처음에 toArray()라고 쓰니 Object[]는 String[] 변환이 불가하다는 오류가 떴었음.
+  단순히 answer.toArray()이면 Object[]가 반환이 된다고 함! 이유는 단지 List의 toArray() 기본형이 Object로 정의되어 있어서라고...
+  그래서 toArray()에게 직접 'String 배열이 필요해' 라고 알려주는 것이 필요함.
+
+  그렇다면 왜 [0]인가?
+  여기서 0은 단순히 빈 배열을 의미함. toArray()는 내부적으로 알아서 answer.size()만큼의 배열을 만듦.
+  String[] arr = new String[answer.size()];
+  for (int i = 0; i < answer.size(); i++) {
+      arr[i] = answer.get(i); // 이 과정들을 한 줄로 적은 것.
+  }
