@@ -1,0 +1,52 @@
+[ 문제 ]
+'''
+알파벳으로 이루어진 문자열 myString과 pat이 주어집니다. myString의 연속된 부분 문자열 중 
+pat이 존재하면 1을 그렇지 않으면 0을 return 하는 solution 함수를 완성해 주세요.
+단, 알파벳 대문자와 소문자는 구분하지 않습니다.
+myString	  pat	      return
+"AbCdEfG"	  "aBc"	    1
+"aaAA"	    "aaaaa"	  0
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 여행 다녀오고 푸니까 왜 이렇게 머리가 새하얗냐...ㅋㅋㅋ
+class Solution {
+    public int solution(String myString, String pat) {
+        String lowerMS = myString.toLowerCase(); // 그냥 myString=에 다시 넣으면 됐는데 왜 새로 선언했지;;
+        String lowerPat = pat.toLowerCase();
+        int answer = 0;
+        
+        // isLowerCase()가 Character 메서드였다니...
+        // 아 toLowerCase()와 완전 헷갈리고 있었다!!!! 이건 String 자체 메서드.
+        // contains() 메서드가 있는지 몰랐고....~.~
+        if (lowerMS.contains(lowerPat))
+            answer = 1;
+        else
+            answer = 0;
+        
+        return answer; // myString보다 길이가 넘는 pat도 자동으로 걸러졌다.
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+int answer = 0;
+String str = myString.toLowerCase();
+String str2 = pat.toLowerCase();
+
+if (str.indexOf(str2) != -1) {
+    return 1;
+}
+return 0; // if문에 return이 있지만 여기에도 return을 써준 걸 볼 수 있다!
+
+[ 타 풀이 2 ]
+return myString.toLowerCase().contains(pat.toLowerCase()) ? 1 : 0; // GPT왈, 보통 이렇게 쓴다고.
+//=====================================================================
+
+[ 메모 ]
+1. 내 풀이에 써놓았듯, isLowerCase()와 toLowerCase()를 헷갈리지 말자!
+
+2. contains("특정 문자열"): String 클래스의 내장 메서드. 이 문자열 안에 특정 문자열이 포함되어 있는지 boolean 형태로 반환함.
+
+3. indexOf("찾을 문자열"): 앞에서부터 검색하여 인덱스 반환. 찾는 문자열이 존재하면 시작 인덱스 정수, 없으면 -1 반환.
