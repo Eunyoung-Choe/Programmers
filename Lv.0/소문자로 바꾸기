@@ -1,0 +1,30 @@
+[ 문제 ]
+'''
+알파벳으로 이루어진 문자열 myString이 주어집니다. 
+모든 알파벳을 소문자로 변환하여 return 하는 solution 함수를 완성해 주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public String solution(String myString) {
+        return myString.toLowerCase();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+StringBuilder sb = new StringBuilder();
+
+for(char k : myString.toCharArray()){
+      sb.append(Character.toLowerCase(k));
+}
+String answer = String.valueOf(sb);
+
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. toCharArray()는 StringBuilder가 아니더라도 String에 바로 갖다 쓸 수 있음.
+  문자열을 한 개씩 쪼개 배열로 만듦. (다른 메모에 기록했었음.)
+  위 타 풀이에선 append를 쓰기 위해 StringBuilder로 선언한 듯.
