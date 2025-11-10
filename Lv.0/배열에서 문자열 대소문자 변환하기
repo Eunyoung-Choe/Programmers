@@ -1,0 +1,55 @@
+[ 문제 ]
+'''
+문자열 배열 strArr가 주어집니다. 
+모든 원소가 알파벳으로만 이루어져 있을 때, 배열에서 홀수번째 인덱스의 문자열은 모든 문자를 대문자로, 
+짝수번째 인덱스의 문자열은 모든 문자를 소문자로 바꿔서 반환하는 solution 함수를 완성해 주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public String[] solution(String[] strArr) {
+        for(int i=0; i<strArr.length; i++) {
+            strArr[i] = (i % 2 == 0) ? strArr[i].toLowerCase() : strArr[i].toUpperCase();
+        }
+        
+        return strArr;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+// 나도 Stream 풀이 익숙해지고 싶다...
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
+class Solution {
+    public String[] solution(String[] strArr) {
+        return IntStream.range(0, strArr.length)
+                        .mapToObj(i -> {i % 2 == 0 ? strArr[i].toLowerCase() : strArr[i].toUpperCase()})
+                        .toArray(String[]::new);
+    }
+}
+// IntStream으로 만든 정수를 mapToObj의 i가 받음. 그래서 인덱스처럼 쓸 수 있는 것.
+// mapToObj 내의 i->{}는 람다식. i가 매개변수임.
+//=====================================================================
+
+[ 메모 ]
+1. map(): 정수만 다룸.
+  mapToObj(): Stream<String>을 다룸.
+
+2. 람다식에 대한 추가 설명을 더 써보겠다.
+  쉽게 말하면 '함수를 한 줄로 표현한 문법'.
+  new Function<Integer, String>() {
+      puplic String apply(Integer i) { // i의 원래 위치
+          return strArr[i].toUpperCase();
+      }
+  }
+  위를 람다식으로 줄이면
+  i -> strArr[i].toUpperCase()
+
+  이전에 풀었던 문제에서 아래와 같은 코드가 있었는데 filter의 i랑 mapToObj의 i 둘다 같은 정수를 받는 i임.
+  return IntStream.range(0, finished.length)
+      .filter(i -> !finished[i])
+      .mapToObj(i -> todo_list[i])
+      .toArray(String[]::new);
