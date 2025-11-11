@@ -52,3 +52,19 @@ return myString;
   char->int는 자동 변환이 가능해 아스키 코드를 바로 쓸 수 있었지만, int->char는 자동 변환이 안 됨.
   int는 32비트 정수, char는 16비트 유니코드 문자라 컨파일 에러로 '데이터 손실 가능성'이 떴던 거임.
   따라서 ch+32 결과를 다시 char에 담기 위해선 (char) 형변환이 필요!
+
+3. char와 Character는 어떤 차이가 있는가.
+    char는 앞서 쓴 듯 16비트 유니코드를 저장하는 기본 자료형으로 메서드를 갖고 있지 않음.
+    Character는 char를 객체로 감싸고 있는 Wrapper Class로 메서드를 지원함.
+
+    그럼 char를 반환해야 하는 클래스인데 현재 Character형이라면 어떻게 return 해야 하는가?
+    Character chObj = 'A';
+    char ch = chObj; // 간단히도 이렇게 바로 변환할 수 있다고.
+    return ch;
+
+    int와 Integer, char와 Character 이렇게 같은 자료형끼리는 위처럼 쉽게 자동 박싱/언박싱이 가능함.
+    그럼 Character인데 int 변환이 되나? -> 가능함.
+    Character는 내부적으로 char를 갖고 있고, char는 int로 자동 변환이 되기 때문.
+    Character chObj = 'A';
+    int ascii = chObj;
+    물론 int에서 바로 Character 객체로 만들 수는 없음. (char) 변환 필요.
