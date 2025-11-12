@@ -1,0 +1,92 @@
+[ 문제 ]
+'''
+영소문자로 이루어진 문자열 my_string과 영소문자 1글자로 이루어진 문자열 alp가 매개변수로 주어질 때, 
+my_string에서 alp에 해당하는 모든 글자를 대문자로 바꾼 문자열을 return 하는 solution 함수를 작성해 주세요.
+my_string	      alp	    result
+"programmers"	  "p"	    "Programmers"
+"lowercase"	    "x"	    "lowercase"
+'''
+//=====================================================================
+
+[ 내 풀이 1 ]
+class Solution {
+    public String solution(String my_string, String alp) {
+        // 형변환으로는 String -> char 불가
+        char alpch = alp.charAt(0); // 매개변수로 쓰인 변수명도 중복 사용 불가
+        
+        for(int i=0; i<my_string.length(); i++) {
+            char ch = my_string.charAt(i);
+            
+            if(alpch == ch) { // char끼리의 비교는 그냥 ==로 가능
+                my_string = my_string.replace(ch, Character.toUpperCase(ch));
+            }
+        }
+        
+        return my_string;
+    }
+}
+
+[ 내 풀이 2 ]
+// 위 코드를 Stream으로도 표현해 보려고 했는데 GPT 도움을 좀 받음.
+import java.util.stream.Collectors;
+import java.util.stream.IntStream; // 왜 java.util.*;은 안 되지
+
+class Solution {
+    public String solution(String my_string, String alp) {
+        char alpch = alp.charAt(0);
+
+        return IntStream.range(0, my_string.length())
+            .mapToObj(i -> { // 중괄호 및 return 명시 필수!
+                char ch = my_string.charAt(i);
+                return (alpch == ch) ? Character.toUpperCase(ch) : ch;
+            })
+            .map(String::valueOf) // char → String (mapToObj가 만든 건 Stream<Character>라서 변환 필요)
+            .collect(Collectors.joining()); // 스트림 결과를 '문자열'로 합치겠다는 뜻
+    }
+}
+// 마지막 단계에서 왜 합치는 메서드가 필요하지 싶었는데 생각해보니 Stream으로 시작한 거지, 원본을 건든 게 아님.
+//=====================================================================
+
+[ 타 풀이 1 ]
+String a = alp.toUpperCase();
+return my_string.replaceAll( alp, a); // replaceAll이라는 게 있었구나....
+
+[ 타 풀이 2 ]
+String answer = my_string.replace(alp, alp.toUpperCase());
+return answer;
+// replace()가 문자를 한 번만 찾는 게 아닌 alp와 일치하는 '모든' 문자를 찾아 변경하는 메서드라고 함.
+// 그럼 replaceAll()이 왜 있는 건가 싶었는데 이 메서드에는 정규식을 기반으로 일치하는 부분을 바꿀 수 있는 기능이 있다고.
+// replace()는 문자/문자열 일치만 교체 가능.
+//=====================================================================
+
+[ 메모 ]
+1. 내 풀이2에서 mapToObj() 람다식에서 중괄호를 쓰는 순간 return이 반드시 필요해짐!
+  중괄호를 안 쓰면 한 줄짜리 식으로 간주해 그 식의 결과값이 자동으로 리턴되니 이땐 return 안 써도 됨.
+
+2. Collector: 스트림에서 사용되는 최종 연산 도구. 스트림 데이터를 어떻게 모아서 결과로 만들지 정의함.
+  참고로 Collection은 전혀 다른 거임. List, Set, Map 이런 자료구조를 가리킴.
+
+3. Collectors.joining(): Stream<String>을 받아서 하나의 문자열로 합쳐주는 역할
+  Collectors 메서드는 이것 말고도 toList(리스트), toSet(집합)도 있음.
+
+4. .collect(): 스트림의 최종 연산 중 하나. 스트림 결과를 어떤 형태로 모을지를 결정함.
+
+  collect()에 대한 설명을 보면서 의문이 들었음.
+  그럼 이전 단계에서 이때까지 생성된 것들을 어딘가 몰아서 저장하고 있다가 collect 단계에서 한 번에 처리하는 건가?
+  아니면 한 단어씩 만들어질 때마다 collect에서 단어를 붙여가는 건가?
+  정답은 후자.
+
+  일단 스트림이라는 건 '게으른(lazy)' 구조라고 함.
+  게으른 구조라는 건 중간 단계인 map, filter 이런 걸 바로 실행하는 게 아니라 요청이 들어왔을 때에만 요소를 계산하겠다는 뜻임.
+  규칙만 쌓아두었다가, .collect()와 같은 최종 연산이 실행되면 그제서야 스트림이 하나씩 데이터를 흘려보내며 실제로 연산을 수행한다는 것.
+  map에서 "a"가 처리됐으면 joining()이 내부 버퍼에 "a"를 추가하고, 그 다음으로 map이 "b"를 처리하면 joining()이 "ab"로 순차적으로 결합함.
+
+  여기까지 읽으면 또 모르는 개념이 나온다. 메서드에 웬 내부 버퍼?
+  엄밀히 말하면, 스트림엔 데이터를 저장하는 공간은 없음. 데이터를 '흘려보내는' 파이프라인 역할만 함.
+  그럼 버퍼의 위치는?
+  Collectors.joining()과 같은 최종 연산이 수행될 때, 그 collector가 결과를 누적하기 위한 내부 StringBuilder 같은 버퍼를 만들어 여기에 하나씩 append하는 구조라고 함.
+  즉, 버퍼는 스트림이 아니라 Collector쪽에 있다는 말.
+  따라서 collect()를 쓰지 않았다면 내부 버퍼에 저장만 되는 게 아닌, 저장조차 되지 않는 것.
+  최종 연산이 호출되기 전까진 그 어떤 실제 연산도 수행되지 않음.
+
+  약간 함수 만들어놓고 함수 호출 안 하면 아무 일도 안 일어나는 것과 같은 느낌인 듯.
