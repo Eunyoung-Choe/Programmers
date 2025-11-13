@@ -1,0 +1,33 @@
+[ 문제 ]
+'''
+문자열 myString과 pat가 주어집니다. 
+myString의 부분 문자열중 pat로 끝나는 가장 긴 부분 문자열을 찾아서 return 하는 solution 함수를 완성해 주세요.
+myString	  pat	    result
+"AbCdEFG"	  "dE"	  "AbCdE"
+"AAAAaaaa"	"a"	    "AAAAaaaa"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 아니 알고리즘 도통 모르다가 이런 메서드 있는지 처음 앎. 근데 뒤에서부터 찾을 생각을 왜 못 했지ㅠㅠ
+class Solution {
+    public String solution(String myString, String pat) {
+        // pat 길이만큼 myString 단어를 저장할 그릇 준비?
+        // pat이 처음 나왔을 때 일단 거기까지는 저장
+        // 그 직후 나오는 게 pat과 같은지를 비교 (다르면 거기서 중단, 같으면 다를 때까지 반복)
+        // 비교하려면 어쨌든 또 pat 길이만큼 끊어서 단어를 비교해야 함.
+        // substring(i, i+pat.length())
+        // ==========위는 내가 처음 생각한 거, 아래는 GPT 도움...ㅎ
+        // 뒤에서부터 찾기!!! (pat으로 끝나야 함 & 길이가 가장 긺)
+        // IndexOf("찾는 문자열") : 앞에서부터 찾아 시작 인덱스 반환
+
+        int index = myString.lastIndexOf(pat);
+        return myString.substring(0, index+pat.length());
+    }
+}
+//=====================================================================
+[ 메모 ]
+1. lastIndexOf("찾을 문자열"): IndexOf()가 앞에서부터 찾아 시작 인덱스를 반환한다면, 이건 '뒤에서부터' 찾는 메서드.
+
+2. endsWith("검사할 문자열"): 다른 풀이에서 썼던데 이건 문자열이 특정 문자열로 끝나는지 확인하는 메서드. 
+  String 클래스가 기본적으로 제공하는 boolean 메서드임.
