@@ -1,0 +1,64 @@
+[ 문제 ]
+'''
+문자열 배열 strArr가 주어집니다. 
+배열 내의 문자열 중 "ad"라는 부분 문자열을 포함하고 있는 모든 문자열을 제거하고 남은 문자열을 순서를 유지하여 배열로 return 하는 solution 함수를 완성해 주세요.
+strArr	                        result
+["and","notad","abcd"]	        ["and","abcd"]
+["there","are","no","a","ds"]	  ["there","are","no","a","ds"]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public String[] solution(String[] strArr) {
+        // 배열을 바로 넣는 생성자는 없음. 배열->List 변환하려면 먼저 아래처럼 Collection 형태로 바꿔야 함.
+        List<String> strList = new ArrayList<>(Arrays.asList(strArr));
+        
+        // for(String str : strList) // 읽기 전용 순회
+        // for-each문은 내부적으로 iterator로 순회 (인덱스 없이도 요소를 가져올 수 있던 게 바로 이것 때문)
+        // 근데 remove()를 쓰면 iterator가 모르는 사이에 리스트가 수정되어 ConcurrentModificationException 에러 발생
+        strList.removeIf(str -> str.contains("ad")); 
+        // 리스트의 각 요소에 대해 조건식을 검사하는 메서드. 알아서 if문 역할하는 거라 람다식을 필요로 함.
+        
+        return strList.stream().toArray(String[]::new); // stream()은 Stream<String> 객체를 만듦. strList.toArray()가 Object[] 반환해서 String[]으로 바로 못 씀.
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+// 이게 나랑 가장 유사한 풀이었는데 아래처럼 쓰는 게 더 쉬운 것 같다.
+ArrayList<String> al = new ArrayList<>();
+for (String s : strArr) {
+    if (!s.contains("ad")) {
+        al.add(s);
+    }
+}
+return al.toArray(String[]::new);
+
+[ 타 풀이 2 ]
+// 이 풀이에선 같은 배열끼리라 Arrays.asList()와 같은 과정 필요없이 바로 스트림화 가능
+return Arrays.stream(strArr).filter(s->!s.contains("ad")).toArray(String[]::new);
+//=====================================================================
+
+[ 메모 ]
+1. Arrays.asList(): 처음에는 이거 없이 바로 ArrayList<>(strArr) 이렇게 썼었는데 이렇게 바로 배열을 바로 넣는 생성자는 없음.
+  즉, 배열을 못 넣고 Collection만 넣을 수 있는 것. Arrays.asList()가 배열을 List로 래핑한 형태로 바꿔줌.
+
+2. Iterator: 컬렉션(List, Set 등)에 저장된 요소들을 순서대로 꺼내기 위한 전용 도구
+  List, Set 같은 자료구조는 ArrayList, LinkedList, HashSet... 등 내부 구조가 다 다름.
+  이 구조를 몰라도 같은 방식으로 요소를 꺼낼 수 있도록 표준화해 놓은 게 Iterator임. 번역하면 '반복자'.
+
+3. 이때까지 for(String str : strList) 이 형태가 그냥 for문의 다른 표기 정도로 알고 있었는데 for-each문이었던.
+  순회하는 것만 아니면 remove() 써도 오류 아님. 처음에 내가 for문 내에 써서 순회 중인데 리스트를 외부에서 바꾸는 거니까 에러 발생했던 것.
+
+4. 내 풀이에서 for-each가 내부적으로 iterator를 써서 에러가 발생한 거였는데, 그럼 for문에선 remove()를 써도 되는 걸까?
+  맞음. 일반 for문은 iterator를 쓰지 않고 index 기반으로 접근하는 방식이기 때문.
+
+5. removeIf()와 remove()의 차이
+  List<String> list = new ArrayList<>();
+  list.add("a");
+  list.remove("a");
+
+  list.removeIf(s->s.equals("a")); // 내부적으로 Iterator 사용
+  참고로 removeIf()는 컬렉션에만 있는 메서드임. 
