@@ -1,0 +1,25 @@
+[ 문제 ]
+'''
+단어가 공백 한 개로 구분되어 있는 문자열 my_string이 매개변수로 주어질 때, 
+my_string에 나온 단어를 앞에서부터 순서대로 담은 문자열 배열을 return 하는 solution 함수를 작성해 주세요.
+my_string	      result
+"i love you"	  ["i", "love", "you"]
+"programmers"	  ["programmers"]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public String[] solution(String my_string) {
+        // split("")이라고 쓰면 한 글자 단위로 쪼개서 "y","o","u" 이렇게 됨.
+        return Arrays.stream(my_string.split(" ")).toArray(String[]::new);
+    }
+}
+
+//=====================================================================
+
+[ 타 풀이 1 ]
+return my_string.split(" "); // split은 결과를 자동으로 배열에 담아서 Stream을 쓸 필요가 없었음!
+
+//=====================================================================
