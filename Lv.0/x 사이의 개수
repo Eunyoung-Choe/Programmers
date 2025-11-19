@@ -1,0 +1,53 @@
+[ 문제 ]
+'''
+문자열 myString이 주어집니다. 
+myString을 문자 "x"를 기준으로 나눴을 때 나눠진 문자열 각각의 길이를 순서대로 저장한 배열을 return 하는 solution 함수를 완성해 주세요.
+myString	      result
+"oxooxoxxox"	  [1, 2, 1, 0, 1, 0]
+"xabcxdefxghi"	[0, 3, 3, 3]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public int[] solution(String myString) {
+        // 문자열 끝이 x로 끝났을 때 사람이 보기엔 끝에 빈 문자열 ""도 있어 보이지만, split()은 기본적으로 문자열 끝에 있는 빈 문자열은 제거함.
+        // split은 따로 그릇에 저장시켜 한 번만 호출되게 하는 게 좋은가봄.
+        String[] parts = myString.split("x", -1); // 이렇게 바로 선언이 되는구나
+        int[] answer = new int[parts.length];
+        
+        for(int i=0; i<parts.length; i++) {
+            answer[i] = parts[i].length();
+        }
+        
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+// Stream 언제 안 보고도 잘 쓸 수 있냑오
+// split 결과를 스트림으로 만들기 위해 stream()에 split배열 넣기. Stream<String> 생성.
+// mapToInt()에서 IntStream으로 변경, toArray()로 int[] 배열로 변환
+return Arrays.stream(myString.split("x",-1)).mapToInt(String::length).toArray();
+//=====================================================================
+
+[ 메모 ]
+1. String[] 배열 선언할 때 꼭 숫자로 크기 지정해 주어야만 하는 줄 알았는데 그냥 바로 split배열 선언 가능.
+
+2. split(구분자, limit): 두 번째 매개변수로 -1을 주면 '마지막 빈 문자열까지 버리지 말고 그대로 포함해라' 의미.
+  근데 -1 말고도 limit 자리에는 어떤 정수든 올 수 있음. 의미가 달라질 뿐임.
+
+  split(구분자, 양수limit): 최대 limit개의 결과만 생성. 마지막 요소에는 '남은 문자열 전체'가 들어감. 끝의 빈 문자열을 제거하지 않음.
+                          "a-b-c-d".split("-", 2)이면 ["a", "b-c-d"] 이렇게 최대 2개로만 갈라짐.
+  split(구분자, limit=0): 이게 디폴트 split(). 결과 개수 제한 없고 끝의 빈 문자열 제거.
+  split(구분자, 음수 limit): 결과 개수 제한이 없으면서 끝의 빈 문자열을 제거하지 않음.
+
+3. 타 풀이의 String::length는 s->s.length()와 같은 코드임.
+  원래 mapToInt() 안에는 화살표 함수 형태가 들어가지만 너무 단순한 코드라 자바에서 줄일 수 있게 해둠.
+  메서드 참조 문법이라고 부름.
+
+4. map()과 mapTo()와 mapToObj() 이제 안 헷갈릴 듯!! (아마...)
+  map(): 객체 스트림 -> 객체 스트림 변환
+  mapToInt()/mapToLong()/mapToDouble(): 객체 스트림 -> 기본 스트림 변환
+  mapToObj(): 기본 스트림 -> 객체 스트림 변환 
