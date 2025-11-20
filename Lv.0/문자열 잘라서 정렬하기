@@ -1,0 +1,57 @@
+[ 문제 ]
+'''
+문자열 myString이 주어집니다. "x"를 기준으로 해당 문자열을 잘라내 배열을 만든 후 
+사전순으로 정렬한 배열을 return 하는 solution 함수를 완성해 주세요.
+단, 빈 문자열은 반환할 배열에 넣지 않습니다.
+myString	        result
+"axbxcxdx"	      ["a","b","c","d"]
+"dxccxbbbxaaaa"	  ["aaaa","bbb","cc","d"]
+'''
+//=====================================================================
+
+[ 내 풀이 1 ]
+// filter 부분은 GPT 도움 받긴 했지만 드디어 내가 Stream으로 풀다니!!!(감격)
+import java.util.*;
+class Solution {
+    public String[] solution(String myString) {
+        return Arrays.stream(myString.split("x"))
+                    .filter(s -> !s.equals("")) // myString. 아니고 매개변수로 s.equals임.
+                    .sorted()
+                    .toArray(String[]::new); // 괄호 내 안 쓰면 Object[]를 String[]으로 변환할 수 없다고 오류 뜸.
+        
+        // Arrays.sort(배열): 오름차순 정렬
+        // 문자열이 “숫자 모양”을 하고 있어도 문자열 비교는 숫자 크기가 아니라 '문자열 사전순' 비교
+        // "10".compareTo("2")  // 결과: "10"이 작다고 나옴.
+    }
+}
+
+[ 내 풀이 2 ]
+// 원래 IntStream으로도 풀려고 했는데 이건 인덱스 범위를 몰라서 쓸려면 split 배열을 따로 빼줘야 함.
+String[] arr = myString.split("x");
+return IntStream.range(0, arr.length)
+        .mapToObj(i -> arr[i])
+        .filter(s -> !s.isEmpty()) // 이 부분에선 앞에서 전달받는 타입이 바뀌니까 다른 매개변수 사용.
+        .sorted()
+        .toArray(String[]::new);
+//=====================================================================
+
+[ 타 풀이 ]
+// 진심 처음 보는 녀석이 나옴.
+import java.util.*;
+class Solution {
+    public String[] solution(String myString) {
+        StringTokenizer st = new StringTokenizer(myString, "x");
+        int idx = 0, N = st.countTokens();
+        String[] result = new String[N];
+
+        for (int n = 0;n < N;n++) // 이건 배열 반환 안 해서 이렇게 값을 넣어주어야 함.
+            result[idx++] = st.nextToken();
+        Arrays.sort(result);
+        return result;
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. StringTokenizer: 이것도 split처럼 특정 구분자로 문자열을 잘라 반환하는 클래스인데 옛날 거라 거의 안 쓰나 봄.
+                    split과의 차이는 이건 빈 문자열을 '무시함'.
