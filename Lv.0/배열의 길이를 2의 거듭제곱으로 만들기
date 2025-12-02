@@ -1,0 +1,51 @@
+[ 문제 ]
+'''
+정수 배열 arr이 매개변수로 주어집니다. 
+arr의 길이가 2의 정수 거듭제곱이 되도록 arr 뒤에 정수 0을 추가하려고 합니다. 
+arr에 최소한의 개수로 0을 추가한 배열을 return 하는 solution 함수를 작성해 주세요.
+arr	                result
+[1, 2, 3, 4, 5, 6]	[1, 2, 3, 4, 5, 6, 0, 0]
+[58, 172, 746, 89]	[58, 172, 746, 89]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.stream.*;
+class Solution {
+    public int[] solution(int[] arr) {
+        // 2를 계속 곱해가다 현재 배열 길이 이상의 거듭제곱 값이 나오는 순간 stop!
+        int N = 1;
+
+        // for문은 맨 처음에는 증감식을 실행시키지 않으니 부적절
+        while(N < arr.length) {
+            N *= 2;
+            if(N >= arr.length) // 다시 보니 불필요한 부분
+                break;
+        }
+        
+        return IntStream.range(0, N)
+                        .map(i -> (i < arr.length) ? arr[i] : 0)
+                        .toArray();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ] 
+// 내 풀이에서도 if문이 필요없었음. 어차피 arr.length보다 커졌으면 while문을 더 이상 실행 안 할 테니까.
+import java.util.*;
+class Solution {
+    public int[] solution(int[] arr) {
+        int length = 1;
+
+        while (length < arr.length) {
+            length *= 2;
+        }
+
+        return Arrays.copyOf(arr, length); // int[]니까 디폴트 값 0으로 채워지는 걸 이용
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. 배열은 전부 타입에 따른 기본값이 들어 있음.
+  따라서 int[] arr = new int[]는 잘못 쓴 거임. new int[0]이 진짜로 비어있는 배열인 것.
