@@ -1,0 +1,53 @@
+[ 문제 ]
+'''
+정수로 이루어진 리스트 num_list가 주어집니다. 
+num_list에서 가장 작은 5개의 수를 제외한 수들을 오름차순으로 담은 리스트를 return하도록 solution 함수를 완성해주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public int[] solution(int[] num_list) {
+        int[] answer = new int[num_list.length-5];
+        Arrays.sort(num_list);
+        
+        // for문 조건식은 ,로 연결 못함. && 사용!
+        // 조건을 계속 잘못 써서 0 배열이 나온 것
+        for(int i=0, j=5; i<num_list.length-5 && j<num_list.length; i++, j++) {
+            answer[i] = num_list[j];
+        }
+        
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+import java.util.Arrays;
+class Solution {
+    public int[] solution(int[] numList) {
+        return Arrays.stream(numList).sorted().skip(5).toArray();
+    }
+}
+
+[ 타 풀이 2 ]
+import java.util.Arrays;
+class Solution {
+    public int[] solution(int[] num_list) {
+        int[] answer = new int[num_list.length - 5];
+        Arrays.sort(num_list);
+
+        for(int i = 5 ; i < num_list.length ; i++) {
+            answer[i-5] = num_list[i]; // 변수 2개 선언없이 이렇게 작성 가능
+        }
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. Arrays.sort(): 원본 배열을 바꿔 정렬함.
+   Arrays.sorted(): 원본 안 바뀜. Stream의 중간 연산으로, 정렬된 새로운 스트림을 생성함.
+
+2. skip(n): Stream에서 처음 n개의 요소를 건너뛰는 중간 연산 메서드
