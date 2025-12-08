@@ -1,0 +1,93 @@
+[ 문제 ]
+'''
+0번부터 n - 1번까지 n명의 학생 중 3명을 선발하는 전국 대회 선발 고사를 보았습니다. 
+등수가 높은 3명을 선발해야 하지만, 개인 사정으로 전국 대회에 참여하지 못하는 학생들이 있어 참여가 가능한 학생 중 등수가 높은 3명을 선발하기로 했습니다.
+각 학생들의 선발 고사 등수를 담은 정수 배열 rank와 전국 대회 참여 가능 여부가 담긴 boolean 배열 attendance가 매개변수로 주어집니다. 
+전국 대회에 선발된 학생 번호들을 등수가 높은 순서대로 각각 a, b, c번이라고 할 때 10000 × a + 100 × b + c를 return 하는 solution 함수를 작성해 주세요.
+<제한사항>
+3 ≤ rank의 길이 = attendance의 길이 ≤ 100
+rank[i]는 i번 학생의 선발 고사 등수를 의미합니다.
+rank의 원소는 1부터 n까지의 정수로 모두 서로 다릅니다.
+attendance[i]는 i번 학생의 전국 대회 참석 가능 여부를 나타냅니다.
+attendance[i]가 true라면 참석 가능, false면 참석 불가능을 의미합니다.
+attendance의 원소 중 적어도 3개는 true입니다.
+rank	                attendance	                                  result
+[3, 7, 2, 5, 4, 6, 1]	[false, true, true, true, true, false, false]	20403
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 제한사항도 잘 봐야했던 문제! 
+import java.util.*;
+class Solution {
+    public int solution(int[] rank, boolean[] attendance) {
+        int answer = 0;
+        Map<Integer, Integer> map = new TreeMap<>(); // 학생 등수, 해당 인덱스
+        
+        for(int i=0; i<attendance.length; i++) {
+            if(attendance[i])
+                map.put(rank[i], i); // TreeMap은 put하는 순간 key기준 오름차순 정렬
+        }
+        
+        int count = 10000;
+        for(int value : map.values()) { // map.values(0) 이런 인덱스로 꺼내는 문법은 없음.
+            answer += count * value;
+            count /= 100;
+        }
+        
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+// 여기선 HashMap이 필요없다고 함. 등수로 정렬해야 하는 대상이 이미 index와 rank 배열로 연결되어 있기 때문.
+// 위 아래 같은 풀이인데 방향만 다른 거임. 메서드를 비교하며 보자.
+import java.util.Comparator;
+import java.util.stream.IntStream;
+
+class Solution {
+    public int solution(int[] rank, boolean[] attendance) {
+        return IntStream.range(0, rank.length)
+                .filter(i -> attendance[i])
+                .boxed()                                    // IntStream을 Stream<Integer>로 바꿈. 이 문제보단 key가 객체일 때 쓰는 게 더 적합.
+                .sorted(Comparator.comparing(i -> rank[i])) // 그래서 객체 전용인 comparing()을 사용. int가 Integer로 박싱됨.
+                .limit(3L)
+                .reduce((current, next) -> current * 100 + next)
+                .get();
+    }
+}
+
+[ 타 풀이 2 ]
+import java.util.*;
+import java.util.stream.*;
+class Solution {
+    public int solution(int[] rank, boolean[] attendance) {
+        return IntStream.range(0, rank.length)
+                .filter(i -> attendance[i]) // 여기선 boxed() 안 써서 이후 int 전용 Comparator를 사용. 성능은 이게 더 유리.
+                .sorted(Comparator.comparingInt(i -> rank[i])) // 각 요소 i에 대해 rank[i]값을 기준으로 오름차순 정렬해라.
+                .limit(3)   // 상위 3명만
+                .reduce(0, (res, v) -> res * 100 + v); // 학생 인덱스로 계산. reduce(누적 시작값, (지금까지 만든 값, 새로 들어온 값) -> 계산식)
+    }
+}
+// sorted()만 쓰면 기본 정렬임. 여기서 원하는 건 단순 번호 정렬이 아닌 rank를 기준으로 정렬해야 하니, 이 정렬 기준을 직접 알려주어야 함.
+// Comparator.comparingInt(): int값을 기준으로 비교하는 Comparator를 만든 것. Stream 정렬의 핵심 문법이라고 함.
+//=====================================================================
+
+[ 메모 ]
+1. Map에는 sorted() 같은 메서드가 없고, 자동으로 오름차순 정렬 기능이 있는 TreeMap 자료구조가 있음.
+  TreeMap: put 하는 순간 key 기준 자동 오름차순 정렬
+  HashMap: 이건 자동 정렬은 없어서 entrySet()으로 꺼내 Stream으로 정렬한다고 함. 가장 흔한 방식이라고.
+
+2. TreeMap은 'key 중복 불가'. 만약 true이면서 같은 순위가 여러 명이면 기존 값을 덮어씀.
+  다만 이 문제에선 등수가 전부 다르다고 했으니 상관 X.
+
+3. 그럼 Map의 구현체는 총 몇 개일까? 이론적으로는 10개 이상이나 실제로는 3개 정도 쓴다고.
+  1) HashMap: 순서 X, key 중복 X, value 중복 O (얘가 Map의 기본 느낌)
+  2) LinkedHashMap: 삽입 순서를 유지하는 HashMap. 성능은 HashMap과 거의 동일. Stream 정렬 결과를 Map으로 다시 담을 때 사용.
+  3) TreeMap: key를 기준으로 자동 정렬 되는 Map. key 중복 문제로 조심해서 써야 함.
+
+4. 타 풀이 1에는 get()이 있는데, 왜 2에는 없을까? 바로 반환 타입이 다르기 때문임.
+  reduce()는 2가지 형태가 있음.
+  타 풀이 1: 초기값이 없는 형태. return 타입이 Optional<Integer>라 Stream이 비어있을 수 있으니 안전장치로 get()으로 꺼내야 함.
+  타 풀이 2: 초기값이 있는 형태. return 타입이 int라 결과가 무조건 있어 get() 필요 없음.
