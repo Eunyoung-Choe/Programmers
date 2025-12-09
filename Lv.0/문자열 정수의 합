@@ -1,0 +1,40 @@
+[ 문제 ]
+'''
+한 자리 정수로 이루어진 문자열 num_str이 주어질 때, 각 자리수의 합을 return하도록 solution 함수를 완성해주세요.
+num_str	    result
+"123456789"	45
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public int solution(String num_str) {
+        int answer = 0;
+        
+        for(int i=0; i<num_str.length(); i++) {
+            answer += num_str.charAt(i) - '0'; // '0' 빼는 방법을 잊고 있었다...!
+        }
+        
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+// 공부용 GPT 풀이
+answer += Integer.parseInt(String.valueOf(num_str.charAt(i)));
+// Integer.parseInt()가 'String 전용' 메서드라서 char를 String으로 바꿔준 거임.
+
+[ 타 풀이 2 ]
+class Solution {
+    public int solution(String numStr) {
+        return numStr.chars().map(c -> c - 48).sum(); // chars(): String을 IntStream으로 바꿔주는 메서드
+    }
+}
+
+//=====================================================================
+
+[ 메모 ]
+1. 처음에 (Integer) num_str.charAt(i).intValue();라고 잘못 씀.
+  일단 char는 기본형인데, 기본형은 메서드 호출이 불가함. intValue()는 Integer 객체 전용 매서드임.
+  캐스팅도 안 되는 이유는 객체 캐스팅은 '상속 관계'일 때만 가능. 기본형<->래퍼 클래스는 캐스팅이 아니라 오토박싱.
