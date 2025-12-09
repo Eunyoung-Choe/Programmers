@@ -69,6 +69,7 @@ class Solution {
   → Deque가 Queue의 상위호환임. Queue 인터페이스는 단방향 큐만 정의하므로 ArrayDeque의 push/pop 등의 스택 기능을 쓰지 못함.
   그래서 요즘 실무에서는 Deque를 더 많이 쓴다고.
 
+
 2. 위 내용에 따르면 stack 기능을 쓰려면 Deque를 써야 한다는 건데, Queue에서의 값 삽입과 Stack에서의 값 삽입이 무슨 차이이길래?
   둘 다 동작은 '넣기'여도, 꺼낼 때의 순서가 완전히 반대라서 의미가 다름.
   같은 ArrayDeque라도
@@ -80,6 +81,7 @@ class Solution {
   q.offer(2); // poll 하면 1 -> 2 순서로 나옴.(FIFO)
   따라서 이번 문제에서 마지막에 넣은 게 가장 먼저 삭제되어야 할 때가 있으니까 stack 기능을 갖고 있는 Deque를 써야 하는 것!
 
+
 3. 이제껏 코테를 풀면서 구현체를 많이 써봤음. 근데 인터페이스와 구현체는 뭐가 다른 걸까.
   • 인터페이스: 기능(메서드) 목록만 적어둔 설계도. 즉, 선언만 있고 동작은 없음.
     Ex) List, Deque, Queue 등 
@@ -90,11 +92,47 @@ class Solution {
         }
 
   • 구현체(implementation): 인터페이스에 적힌 걸 실제로 어떻게 '동작'할지 코드로 만든 클래스.
-    Ex) List 구현체=ArrayList,LinkedList,Vector / Deque 구현체=ArrayDeque, LinkedList
+    Ex) List 구현체=ArrayList,LinkedList,Vector / Deque 구현체=ArrayDeque, LinkedList, PriorityQueue
 
         Deque 인터페이스는 '양쪽에서 넣고 빼는 기능이 있어야 한다'고 선언함.
-        ArrayDeque는 Deque가 정의한 그 기능들을 '배열' 방식으로 구현한 클래스.
+        ArrayDeque는 Deque가 정의한 그 기능들을 '배열 기반 deque'로 구현하겠다는 클래스.
 
   그렇다면 List<Integer> list = new List<>();라고 쓰면 왼쪽 List가 인터페이스, new 다음의 List는 구현체가 되는 걸까?
   답은 No. 인터페이스는 객체 생성이 불가능해 아예 컴파일 오류가 남.
   그래서 선언할 때 ArrayList 위치가 new 다음이었던 것.
+
+
+4. 다른 문제 풀다 여기에 개념 추가가 필요할 것 같아 다시 옴.
+    ※ 다형성: 타입 ≠ 실제 객체
+
+    Animal a = new Dog(); // 업캐스팅 (Dog는 Animal의 자식이니 자동으로 형변환, (Animal) 안 써도 됨.)
+    Dog d = (Dog) a; // 다운캐스팅
+    a.eat();   // ✅ (Animal에 있음)
+    a.bark();  // ❌ (Dog 전용 메서드)
+    GPT가 들어준 예시인데, a가 사용 가능한 메서드가 Animal 기준이라고 하는 거임. 
+    처음엔 헷갈렸는데 생각해보니 위 Deque, Queue 예시에서도 stack 메서드를 쓰려면 그걸 갖고 있는 Deque를 써야 한다고 했었음.
+    즉, 쓸 수 있는 메서드 범위는 맨 앞에 나오는 변수 '타입'으로 결정되는 것. 그 메서드가 어떻게 동작하는지는 구현체로 결정됨.
+
+    왜 굳이 이렇게 불편하게 쓰는 걸까. → 1. 인터페이스 중심 설계로 기능을 제한해 실수 방지 & 구현체 교체 쉬움 / 2. 타입 불일치 하면 컴파일러가 알려줘서 안정성
+
+    그럼 Dog 전용 메서드는 어떻게 쓸 수 있나? 아래와 같이 다운캐스팅을 하거나, instanceof를 쓰거나, 처음부터 Dog 타입으로 받던가.
+    1) Dog d = (Dog) a; d.bark();    
+    2) if (a instanceof Dog) {
+            ((Dog) a).bark();
+        }
+    3) Dog d = new Dog();
+
+    어라, List<Integer> list = new List<>();은 에러라면서 왜 3번은 가능하지?
+    여기에서 Dog는 인터페이스가 아니라 '클래스'이기 때문!
+    class Animal {
+        void eat() {}
+    }
+    
+    class Dog extends Animal {
+        @Override
+        void eat() {// Animal에서 받은 eat() 메서드 수정 가능}
+        void bark() {}
+    }
+    위에서 Dog 클래스를 구체 클래스라고 하는데, 구체 클래스는 객체 생성이 가능함.
+    추가로 위 Dog 클래스에서 eat()을 재정의 하고 있으므로 Animal a = new Dog(); a.eat();을 실행하면 Dog의 eat()이 실행됨.
+    (재정의 안 했으면(=오버라이딩이 없으면) 그냥 Animal의 eat()이 그대로 출력됨.)
