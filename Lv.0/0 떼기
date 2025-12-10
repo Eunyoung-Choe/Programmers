@@ -1,0 +1,26 @@
+[ 문제 ]
+'''
+정수로 이루어진 문자열 n_str이 주어질 때, 
+n_str의 가장 왼쪽에 처음으로 등장하는 0들을 뗀 문자열을 return하도록 solution 함수를 완성해주세요.
+n_str	  result
+"0010"	"10"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public String solution(String n_str) {
+        return String.valueOf(Integer.parseInt(n_str));
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+return ""+Integer.parseInt(n_str); // String.valueOf() 말고 "" 붙이는 방법도 기억하자.
+//=====================================================================
+
+[ 메모 ]
+1. Integer.~ 메서드들 헷갈려서 정리해 봄. 
+  Integer.parseInt(String s): 문자열 -> 기본형 int
+  Intger.valueOf(String s): 문자열 -> Integer 객체
+  Integer.valueOf(String s).intValue(): Integer 객체 -> 기본형 int (변환이 아니라 추출 메서드)
