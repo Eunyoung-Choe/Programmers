@@ -1,0 +1,35 @@
+[ 문제 ]
+'''
+0 이상의 두 정수가 문자열 a, b로 주어질 때, a + b의 값을 문자열로 return 하는 solution 함수를 작성해 주세요.
+1 ≤ a의 길이 ≤ 100,000
+1 ≤ b의 길이 ≤ 100,000
+a	                      b	                       result
+"582"	                  "734"	                   "1316"
+"18446744073709551615"	"287346502836570928366"	 "305793246910280479981"
+"0"	                    "0"                      "0"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 헉 처음보는 자료형 등장.
+import java.math.BigInteger; // math 라이브러리에 있네.
+class Solution {
+    public String solution(String a, String b) {
+        // int, long의 범위를 벗어나는 길이의 입력 때문에 NumberFormatException 발생
+        BigInteger A = new BigInteger(a); // BigInteger는 반드시 ()에 문자열 또는 숫자를 인자로 넣어야 함.
+        BigInteger B = new BigInteger(b);
+        
+        return A.add(B).toString();
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. BigInteger: 자바에서 제공하는 무한 정수 자료형. 저장하는 숫자 크기 상한이 없음. '문자열'로부터 생성 가능.
+  BigInteger EX = new BigInteger(숫자); 라고 쓰면 컴파일 에러. 문자열로 입력받아 내부적으로 정수로 바꾼다고 함.
+
+  int는 32비트 정수 -> 10자리 넘어가면 못 담음.
+  long은 64비트 정수 -> 19자리 넘어가면 못 담음.
+  자바에 double 자료형 있지 않았나 싶었는데 그건 실수 타입이었음ㅋ.
+
+2. BigInteger와 비슷하게 BigDecimal 자료형도 있음. 무한 크기 소수.
