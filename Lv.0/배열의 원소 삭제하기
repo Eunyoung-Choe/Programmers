@@ -1,0 +1,65 @@
+[ 문제 ]
+'''
+정수 배열 arr과 delete_list가 있습니다. arr의 원소 중 delete_list의 원소를 모두 삭제하고 
+남은 원소들은 기존의 arr에 있던 순서를 유지한 배열을 return 하는 solution 함수를 작성해 주세요.
+arr	                      delete_list	                result
+[293, 1000, 395, 678, 94]	[94, 777, 104, 1000, 1, 12]	[293, 395, 678]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 오 한 번에 성공^^v (느린 것 같지만;)
+import java.util.*;
+class Solution {
+    public int[] solution(int[] arr, int[] delete_list) {
+        for(int i=0; i<arr.length; i++) {
+            for(int j=0; j<delete_list.length; j++) {
+                arr[i] = (arr[i]==delete_list[j]) ? 0 : arr[i];
+            }
+        }
+        
+        return Arrays.stream(arr)
+                     .filter(i -> i!=0)
+                     .toArray();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+return IntStream.of(arr)
+                .filter(
+                    i -> !IntStream.of(delete_list).anyMatch(s -> s == i) // 새로운 메서드 확인
+                )
+                .toArray();
+
+[ 타 풀이 2 ]
+import java.util.Arrays;
+import java.util.HashSet;
+class Solution {
+    public int[] solution(int[] arr, int[] delete_list) {
+        HashSet<Integer> delete = new HashSet<>(); // 왜 Hash라는 걸 본 적 있는 것 같지 했더니 전에 쓴 건 HashMap이었고ㅋ
+        for (int del : delete_list)
+            delete.add(del);
+        return Arrays.stream(arr).filter(i -> !delete.contains(i)).toArray(); // HashSet은 contains() 메서드 있음.
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. anyMatch(): Stream 안에서 조건을 만족하는 요소가 하나라도 있으면 true 반환
+
+2. import java.util.*;에는 Stream 클래스 포함 안 됨.
+
+3. HashSet: 중복을 허용하지 않는 자료구조인 Set의 구현체. Set 중 가장 빠름.
+  List → 순서 O, 중복 O
+  Set → 순서 X, 중복 X (같은 값이 들어오면 자동으로 걸러지는데, 이 문제에선 요소가 다 다르다고 했으니 상관 X)
+
+  Set의 저장 결과는 '배열+링크드 리스트/트리' 형태라 단순 배열 형태가 아님.
+  결과는 배열처럼 보이나 실제 결과는 자료구조마다 달라진다는 것.
+  따라서 배열과 달리 삭제 및 추가가 가능함.
+  값 수정은 불가한 게, Set은 순서가 없어서 인덱스가 없음. 수정하고 싶으면 원래 요소를 삭제한 뒤 새 요소 다시 추가.
+
+4. HashSet<Integer> delete = new HashSet<>();는 인터페이스=구현체 모양인데 왜 가능하지?
+  보통 다형성 때문에 Set<Integer> set = new HashSet<>(); 형태를 선호하지만 위 형태가 불가능한 건 아님.
+  전에도 GPT한테 물어본 건 List<Integer> ex = new List<>();로 양쪽이 인터페이스였어서 안 됐던 거고.
+  타 풀이 2를 Set<Integer> delete = new HashSet<>();로 바꿔도 Set은 HashSet의 상위 타입이므로 코드는 완전히 동일함.
