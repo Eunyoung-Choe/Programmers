@@ -1,0 +1,86 @@
+[ 문제 ]
+'''
+정수 배열 date1과 date2가 주어집니다. 두 배열은 각각 날짜를 나타내며 [year, month, day] 꼴로 주어집니다. 
+각 배열에서 year는 연도를, month는 월을, day는 날짜를 나타냅니다.
+만약 date1이 date2보다 앞서는 날짜라면 1을, 아니면 0을 return 하는 solution 함수를 완성해 주세요.
+date1	          date2	          result
+[2021, 12, 28]	[2021, 12, 29]	1
+[1024, 10, 24]	[1024, 10, 24]	0
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 암만 생각해도 노가다 풀이 밖에 생각이 안 남......
+// import java.util.stream.*;
+class Solution {
+    public int solution(int[] date1, int[] date2) {
+        // date를 한 덩어리 숫자로 합치려 했으나 Stream<String> 전용이라 아래 코드 에러
+//         int day1 = Arrays.stream(date1).collect(Collectors.joining());
+//         int day2 = Arrays.stream(date2).collect(Collectors.joining());
+//         return (day1 < day2) ? 1 : 0;
+        
+        // 연도가 같지 않으면
+        if(date1[0] != date2[0])
+            return (date1[0] < date2[0]) ? 1 : 0;
+        
+        // 월이 같지 않으면
+        if(date1[1] != date2[1])
+            return (date1[1] < date2[1]) ? 1 : 0;
+        
+        // 일이 같지 않으면
+        if(date1[2] != date2[2])
+            return (date1[2] < date2[2]) ? 1 : 0;
+        
+        return 0;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+import java.time.LocalDate; // 패키지명이 time으로 시작하네.
+class Solution {
+    public int solution(int[] date1, int[] date2) {
+        LocalDate dateA = LocalDate.of(date1[0], date1[1], date1[2]);
+        LocalDate dateB = LocalDate.of(date2[0], date2[1], date2[2]);
+
+        if (dateA.isBefore(dateB)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+}
+
+[ 타 풀이 2 ]
+import java.util.*;
+class Solution {
+    public int solution(int[] date1, int[] date2) {
+        return Arrays.compare(date1, date2) < 0 ? 1 : 0;
+    }
+}
+
+[ 타 풀이 3 ]
+// 대략 총 일수를 세서 크기 비교를 한 풀이
+class Solution {
+    public int solution(int[] date1, int[] date2) {
+        int date1Days = getTotalDays(date1);
+        int date2Days = getTotalDays(date2);
+        return date1Days < date2Days ? 1 : 0;
+    }
+
+    public int getTotalDays(int[] date) { // date는 매개변수 이름일 뿐, date1과 date2를 받게 됨.
+        int result = 0;
+        result += date[0] * 360;
+        result += date[1] * 30;
+        result += date[2];
+        return result;
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. LocalDate: 자바에서 날짜(연·월·일)만 표현하는 클래스
+  isBefore(): 이전 날짜인지 비교하는 메서드
+
+2. Arrays.compare(): Java 9부터 가능한 두 배열을 사전식으로 비교하는 메서드
+  인덱스 0부터 앞에서부터 비교하니까 이 문제처럼 날짜 비교에 써먹을 수 있는 것.
