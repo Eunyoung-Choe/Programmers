@@ -1,0 +1,36 @@
+[ 문제 ]
+'''
+알파벳 소문자로 이루어진 문자열 myString이 주어집니다. 
+알파벳 순서에서 "l"보다 앞서는 모든 문자를 "l"로 바꾼 문자열을 return 하는 solution 함수를 완성해 주세요.
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public String solution(String myString) {
+        StringBuilder sb = new StringBuilder();
+        
+        for(int i=0; i<myString.length(); i++) {
+            if(myString.charAt(i) < 'l')
+                sb.append('l');
+            else
+                sb.append(myString.charAt(i));
+        }
+        
+        return sb.toString();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+return myString.replaceAll("[^l-z]", "l");
+// 대괄호[] 안은 '한 글자'를 의미함. [a-z]이면 a부터 z 중 한 글자라도 일치하면 매칭.
+// 대괄호 내의 ^은 부정(NOT)의 의미라서 l부터 z까지가 아닌 문자를 선택한 것.
+// ∴ l~z가 아닌 모든 문자 하나하나를 "l"로 바꾸겠다.
+
+//=====================================================================
+
+[ 메모 ]
+1. StringBuilder에 넣을 땐 String으로 넣어야 하나? 
+  -> No. char 뿐만 아니라 다른 타입들도 넣을 수 있었다...! int, char, boolean, Object 다 가능.
