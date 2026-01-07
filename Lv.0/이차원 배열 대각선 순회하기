@@ -1,0 +1,44 @@
+[ 문제 ]
+'''
+2차원 정수 배열 board와 정수 k가 주어집니다.
+i + j <= k를 만족하는 모든 (i, j)에 대한 board[i][j]의 합을 return 하는 solution 함수를 완성해 주세요.
+1 ≤ board의 길이 ≤ 100
+1 ≤ board[i]의 길이 ≤ 100
+1 ≤ board[i][j] ≤ 10,000
+모든 board[i]의 길이는 같습니다.
+0 ≤ k < board의 길이 + board[i]의 길이
+board                                    	k	result
+[[0, 1, 2],[1, 2, 3],[2, 3, 4],[3, 4, 5]]	2	8
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 완전 간단한 문제인데 처음에 배열 순회없이 i+j<=k 조건부터 찾으려고 해서 시간 허비함ㅠㅠ 
+class Solution {
+    public int solution(int[][] board, int k) {
+        int answer = 0;
+        int row = board.length;
+        int col = board[0].length;
+        
+        for(int i=0; i<row; i++) {
+            for(int j=0; j<col; j++) {
+                answer += (i + j <= k) ? board[i][j] : 0;
+            }
+        }
+        
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+int answer = 0;
+for(int i = 0;board.length>i&&i<=k;i++){
+    for(int j = 0;board[i].length>j&&j+i<=k;j++)
+        answer+=board[i][j];
+}
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. 배열 풀 때 인덱스 범위를 벗어나지 않는지, 벗어날 우려가 있다면 어떻게 풀이를 바꿔야 할 지 생각하자...!!
