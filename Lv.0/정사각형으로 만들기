@@ -63,6 +63,7 @@ return array;
 
   크기 변경이 되는 2차원 리스트는 아래와 같이 선언함.
   List<List<Integer>> list = new ArrayList<>(); // List<Integer> 하나 당 int[] 하나인 것
+  그래서 다른 풀이에서도 Arrays.asList()를 단독으로 쓰지 않고 new ArrayList<>(Arrays.asList(strArr)) 이렇게 써서 완전히 새로운 ArrayList를 생성함.
 
 2. 리스트는 list[i] 아니고 list.get(i).add(0) 이렇게.
 
