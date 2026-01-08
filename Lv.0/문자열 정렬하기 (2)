@@ -1,0 +1,66 @@
+[ 문제 ]
+'''
+영어 대소문자로 이루어진 문자열 my_string이 매개변수로 주어질 때, 
+my_string을 모두 소문자로 바꾸고 알파벳 순서대로 정렬한 문자열을 return 하도록 solution 함수를 완성해보세요.
+my_string	  result
+"Bcad"	    "abcd"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.Arrays;
+import java.util.stream.*; // Collectors는 stream 메서드라 이게 필요
+class Solution {
+    public String solution(String my_string) {
+        String myString = my_string.toLowerCase();
+        String[] arr = myString.split("");
+        
+        return Arrays.stream(arr)
+                     .sorted()     // 처음에 sort()를 써서 에러였음.
+                     .collect(Collectors.joining());
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+import java.util.*;
+class Solution {
+    public String solution(String my_string) {
+        char[] c = my_string.toLowerCase().toCharArray(); // char 배열화
+        Arrays.sort(c); // 원본 변경
+        return new String(c); // String 클래스의 생성자
+    }
+}
+
+[ 타 풀이 2 ]
+import java.util.*;
+import java.util.stream.Collectors;
+class Solution {
+    public String solution(String myString) {
+        return Arrays.stream(myString.toLowerCase(Locale.ROOT).split("")) // toLowerCase에 처음 보는 게 들어있다.
+                     .sorted()
+                     .collect(Collectors.joining());
+    }
+}
+// 위 풀이에서 Stream에서도 split을 쓸 수 있는 건가 
+//=====================================================================
+
+[ 메모 ]
+1. 처음에 Arrays.sort(arr).collect(Collectors.joining());이라고 써서 에러 남.
+  일단 collect()는 Stream 메서드임. 근데 Arrays.sort()는 배열을 직접 정렬하는 것일 뿐 아무것도 반환하지 않음(void).
+  그래서 저게 아니라 Stream화 후, 중간 연산인 sorted() 메서드를 써야 함.
+
+2. String은 내부적으로 char 배열 기반으로 만들어진 객체라서 String(char[] value) 생성자가 제공됨!
+  char[] -> String이 가능하구나, 기억하자.
+
+  참고로 String s = "hello"; 이렇게 쓰는 걸 String literal(문자 리터럴)이라고 함.
+  리터럴 = 말 그대로 코드에 직접 써놓은 값 자체 
+
+  그럼 String a = "hello";랑 String b = new String("hello");가 같은 말이냐?
+  아님. 만들어지는 내용은 똑같으나 전자는 String Pool에 저장, 후자는 Heap에 저장.
+  따라서 a.equals(b)는 같다고 나오나, a == b 하면 참조 비교라 다르다고 나옴.
+
+3. 타 풀이 2의 Locale.ROOT는 뭐지?
+  우선 toLowerCase() 매개변수 디폴트 값은 Local.getDefault()라는 함수의 리턴값으로 되어 있다고 함.
+  근데 이게 Locale에 민감한 함수라 언어별로 변경되는 값이 달라질 수 있다고.
+  즉, 위 풀이에선 문자열을 소문자로 변환할 때 불필요한 오류를 방지하기 위해 Locale.ROOT를 사용한 것.
