@@ -1,0 +1,38 @@
+[ 문제 ]
+'''
+문자열 my_str과 n이 매개변수로 주어질 때, 
+my_str을 길이 n씩 잘라서 저장한 배열을 return하도록 solution 함수를 완성해주세요.
+my_str	            n	 result
+"abc1Addfggg4556b"	6	 ["abc1Ad", "dfggg4", "556b"]
+"abcdef123"	        3	 ["abc", "def", "123"]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 배열 범위, 길이 지정 수식 쓰는 게 머리가 따라주지 않아...
+class Solution {
+    public String[] solution(String my_str, int n) {
+        int len = (my_str.length() + n - 1) / n; // 배열 길이 지정
+        String[] strArr = new String[len]; 
+        
+        int index = 0;
+        // substring()은 글자 수가 부족하면 나머지는 그대로 출력함.
+        // my_str.length()라고만 쓰면 i=12가 됐을 때 조건식에는 부합하나 i+n이 my_str 범위 밖으로 넘어가게 됨.
+        for(int i=0; i<my_str.length(); i+=n) {
+            int end = Math.min(i + n, my_str.length()); // 더 작은 값을 반환하는 함수
+            strArr[index] = my_str.substring(i, end);
+            index++;
+        }
+        
+        return strArr;
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. 배열 길이 지정이 어려웠다. 아래 코드를 수식으로 표현한 게 내 풀이의 len.
+  int len = my_str.length() / n;
+  if (my_str.length() % n != 0) {
+      len++;
+  }
+  +n-1을 하는 이유는 정수 나눗셈은 '버림'이니까 미리 조금 크게 만들어서 나누는 거임.
