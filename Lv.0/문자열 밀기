@@ -1,0 +1,58 @@
+[ 문제 ]
+'''
+문자열 "hello"에서 각 문자를 오른쪽으로 한 칸씩 밀고 마지막 문자는 맨 앞으로 이동시키면 "ohell"이 됩니다. 
+이것을 문자열을 민다고 정의한다면 문자열 A와 B가 매개변수로 주어질 때, 
+A를 밀어서 B가 될 수 있다면 밀어야 하는 최소 횟수를 return하고 밀어서 B가 될 수 없으면 -1을 return 하도록 solution 함수를 완성해보세요.
+A	          B	      result
+"hello"	  "ohell"	  1
+"apple"	  "elppa"	  -1
+"atat"	  "tata"	  1
+"abc"	    "abc"	    0
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 나 이렇게 길게 풀었는데 타 풀이 무엇
+import java.util.*;
+class Solution {
+    public int solution(String A, String B) {
+        if (A.equals(B)) return 0;
+        
+        int count = 0;
+        StringBuilder sb1 = new StringBuilder(); // 이전에 민 거 저장
+        StringBuilder sb2 = new StringBuilder(); // 이제 밀 거 저장
+        sb1.append(A);
+        
+        // 맨 뒷 인덱스 : A.length()-1, 밀려나는 인덱스 : 0~A.length()-2
+        // 전부 삭제 : sb.setLength(0);
+        for(int i=0; i<A.length()-1; i++) {
+            sb2.append(sb1.charAt(sb1.length()-1));
+            sb2.append(sb1.substring(0, sb1.length()-1));
+            count++;
+            
+            if ((sb2.toString()).equals(B)) {
+                break;
+            }
+            
+            sb1.setLength(0); // sb1을 초기화 하여
+            sb1.append(sb2); // 밀어낸 sb2값으로 다시 저장
+            sb2.setLength(0); // sb2도 초기화
+        }
+        
+        return (sb2.toString()).equals(B) ? count : -1;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+String tempB = B.repeat(2);
+return tempB.indexOf(A);
+// tempB는 "ohellohell"이 됨. 여기서 A가 시작되는 인덱스가 곧 몇 번 밀었는지 횟수가 됨! 
+// indexOf()는 못 찾으면 자동 -1 반환.
+//=====================================================================
+
+[ 메모 ]
+1. StringBuilder 내용 초기화 하는 메서드: sb.setLength(0) 또는 sb.delete(0, sb.length());
+  sb.delete(0, 2)면 0~1 부분을 삭제하는 것.
+
+2. indexOf()는 String 말고도 StringBuilder, StringBuffer에서도 사용 가능. 배열에는 없음.
