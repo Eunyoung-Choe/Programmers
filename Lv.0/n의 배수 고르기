@@ -1,0 +1,53 @@
+[ 문제 ]
+'''
+정수 n과 정수 배열 numlist가 매개변수로 주어질 때, 
+numlist에서 n의 배수가 아닌 수들을 제거한 배열을 return하도록 solution 함수를 완성해주세요.
+n	numlist	                        result
+3	[4, 5, 6, 7, 8, 9, 10, 11, 12]	[6, 9, 12]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 컬렉션 너무 오랜만에 썼더니 선언이 헷갈리네^^;
+import java.util.*;
+class Solution {
+    public int[] solution(int n, int[] numlist) {
+        Integer[] boxed = Arrays.stream(numlist)
+                                .boxed()  // 여기까진 Stream<Integer>
+                                .toArray(Integer[]::new);
+        
+        List<Integer> list = new ArrayList<>(Arrays.asList(boxed)); // asList()에 기본형은 들어가지 않음..!
+        
+        list.removeIf(i -> i % n != 0); // remove()이면 이 코드 불가
+        
+        // toArray()도 객체 전용 메서드라 내부에 int[]가 못 들어감.
+        return list.stream()
+                   .mapToInt(i -> i) // Integer::intValue와 동일
+                   .toArray();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+import java.util.Arrays;
+class Solution {
+    public int[] solution(int n, int[] numList) {
+        return Arrays.stream(numList).filter(value -> value % n == 0).toArray(); // 새 배열 생성
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. 처음에 Arrays.asList(numlist)로 int[] 배열을 바로 넣었는데, asList()는 참조 타입(T) 전용으로 기본형은 불가!
+  따라서 박싱을 먼저 해주어야 함.
+
+2. boxed 코드에서 toArray() 내에 생성자 안 쓰면 Object[] cannot be converted to Integer[]라는 에러 문구가 나옴.
+  toArray() 생성자 작성 유무를 이전 다른 문제에서 적었었네ㅎ
+
+3. 내 풀이에서 for문 없이 어떻게 코드 한 줄로 요소를 순회했지?
+  -> removeIf()는 내부적으로 Iterator를 써서 한 줄 선언이 가능함. 함수 내에 순회 코드가 담겨있음.
+
+4. 타 풀이에서 배열 크기 지정이 필요없는 이유는 IntStream.toArray()는 내부에서 요소 개수를 세서 딱 맞는 크기의 배열을 자동 생성하기 때문.
+  웬 IntStream? -> Arrays.stream(int[])가 IntStream.
+  처음에 이 말이 이해가 안 간 게, IntStream.range()를 자주 써서 IntStream을 인덱스와 같은 연속된 정수를 흘려보내는 역할로 착각함;;
+  IntStream은 int 값을 흘려보내는 스트림!
