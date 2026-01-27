@@ -1,0 +1,54 @@
+[ 문제 ]
+'''
+두 배열이 얼마나 유사한지 확인해보려고 합니다. 
+문자열 배열 s1과 s2가 주어질 때 같은 원소의 개수를 return하도록 solution 함수를 완성해주세요.
+s1과 s2의 원소는 알파벳 소문자로만 이루어져 있습니다
+s1과 s2는 각각 중복된 원소를 갖지 않습니다.
+s1	            s2	                          result
+["a", "b", "c"]	["com", "b", "d", "p", "c"]	  2
+["n", "omg"]	  ["m", "dot"]	                0
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// Stream 갈 길이 멀다...! 한 번씩 접해본 건데 까먹네-_-;;
+import java.util.Arrays;
+class Solution {
+    public int solution(String[] s1, String[] s2) {
+        // answer++처럼 Stream 내에서 외부 요소를 변경하는 건 지양하라 함.
+        // 이전 문제에서 Stream은 Long을 뱉기 때문에 (int) 캐스팅이 필요하다 했음.
+        return (int) Arrays.stream(s1)
+                           .filter(i -> Arrays.stream(s2).anyMatch(s -> s.equals(i))) // 공통 원소만 남겨서 그 개수를 세도록 filter 사용!
+                           .count();
+        
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+int answer = 0;
+for(String str1 : s1){
+    for(String str2 : s2){
+        if(str1.equals(str2)){
+            answer++;
+            break;
+        }
+    }
+}
+return answer;
+
+[ 타 풀이 2 ]
+// 오랜만에 나온 HashSet.
+import java.util.*;
+class Solution {
+    public int solution(String[] s1, String[] s2) {
+        Set<String> set = new HashSet<>(Arrays.asList(s1));
+        return (int)Arrays.stream(s2).filter(set::contains).count(); // 근데 List에도 contains 있어서 굳이 Set까진 필요없다고.
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. IntStream은 원소가 int일 때만 흘려보낼 수 있음. 지금은 String 배열이니 Arrays.stream().
+
+2. 타 풀이를 보면 set::contains가 있는데 람다 축약형임. s -> set.contains(s)와 같음.
