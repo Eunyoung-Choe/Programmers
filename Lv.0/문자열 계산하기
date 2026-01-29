@@ -1,0 +1,52 @@
+[ 문제 ]
+'''
+my_string은 "3 + 5"처럼 문자열로 된 수식입니다. 
+문자열 my_string이 매개변수로 주어질 때, 수식을 계산한 값을 return 하는 solution 함수를 완성해주세요.
+연산자는 +, -만 존재합니다.
+my_string의 숫자와 연산자는 공백 하나로 구분되어 있습니다.
+my_string	  result
+"3 + 4"	    7  
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 고민한 보람이 있었다!
+import java.util.stream.IntStream;
+class Solution {
+    public int solution(String my_string) {
+        // ["3", "+", "4", "-", "5"] -> 홀수 인덱스에만 연산자가 나옴.
+        String[] arr = my_string.split(" ");
+        int answer = Integer.parseInt(arr[0]);
+        
+        for(int i=1; i<arr.length; i+=2) {
+            if (arr[i].equals("+"))
+                answer += Integer.parseInt(arr[i+1]);
+            else
+                answer -= Integer.parseInt(arr[i+1]);
+        }
+        
+        
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+// 오 음수 부호로 계산할 수 있을까 싶었는데 이런 논리가.
+import java.util.Arrays;
+class Solution {
+    public int solution(String myString) {
+        return Arrays.stream(myString.replaceAll("- ", "-") // ex) "3 + 5 -2 + 4" 음수 부호로 변환
+                     .replaceAll("[+] ", "") // "3 5 -2 4" 더하기를 그냥 숫자 나열로 전환
+                     .trim() // trim()은 중간 공백은 제거 안 됨.
+                     .split(" ")) 
+                     .mapToInt(Integer::parseInt)
+                     .sum();
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. split() 내에는 정규식만 들어갈 수 있음. &&이나|| 불가.
+  타 풀이의 []: []에 들어간 것들 중 하나. ex) [+-] = + 또는 -
+               [+]는 + 문자 하나를 의미.
