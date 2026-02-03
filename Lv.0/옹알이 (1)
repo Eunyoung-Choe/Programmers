@@ -1,0 +1,54 @@
+[ 문제 ]
+'''
+머쓱이는 태어난 지 6개월 된 조카를 돌보고 있습니다. 
+조카는 아직 "aya", "ye", "woo", "ma" 네 가지 발음을 최대 한 번씩 사용해 조합한(이어 붙인) 발음밖에 하지 못합니다. 
+문자열 배열 babbling이 매개변수로 주어질 때, 머쓱이의 조카가 발음할 수 있는 단어의 개수를 return하도록 solution 함수를 완성해주세요.
+babbling의 각 문자열에서 "aya", "ye", "woo", "ma"는 각각 최대 한 번씩만 등장합니다.
+즉, 각 문자열의 가능한 모든 부분 문자열 중에서 "aya", "ye", "woo", "ma"가 한 번씩만 등장합니다.
+문자열은 알파벳 소문자로만 이루어져 있습니다.
+babbling	                                    result
+["aya", "yee", "u", "maa", "wyeoo"]	          1
+["ayaye", "uuuma", "ye", "yemawoo", "ayaa"]	  3
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 이 문제에선 babbling의 각 문자열에서 네 문자열이 최대 한 번씩만 등장한다는 조건이 있어서 아래 풀이가 통과됨. 
+class Solution {
+    public int solution(String[] babbling) {
+        int answer = 0;
+        
+        for(String str : babbling) {
+            String s = str.replaceAll("(aya|ye|woo|ma)", "0");
+            if (s.matches("0+")) answer++;  // 0|00|000|0000
+        }
+        
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+int answer = 0;
+
+for(int i =0; i < babbling.length; i++) {
+    babbling[i] = babbling[i].replace("aya", "1");
+    babbling[i] = babbling[i].replace("woo", "1");
+    babbling[i] = babbling[i].replace("ye", "1");
+    babbling[i] = babbling[i].replace("ma", "1");
+    babbling[i] = babbling[i].replace("1", ""); // 1만 남았으면 여기서 ""가 되니까
+    if(babbling[i].isEmpty()) {
+        answer = answer + 1; // 여기서 카운팅이 됨.
+    }
+}
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. a 또는 b는 한 단어라 "[ab]"이렇게 쓰는데 이 문제처럼 길이가 2이상일 땐 ()괄호랑 |를 써야 함.
+
+2. 처음엔 네 문자열이 한 번씩만 사용 가능하대서 replaceFirst("(aya|ye|woo|ma)")라고 썼었는데, 이건 전부 바꿔주지 않음.
+  여러 번 치환하는 게 아니라, 치환 후보가 여러 개라고 명시만 됐을 뿐임. 치환은 1번만 이루어짐.
+
+3. mathes()는 정규식 사용 가능한 equals()라 보면 됨. equals()는 정규식 X.
+  +는 자주 쓰이는 정규식이라고 함. "0+" = 0이 하나 이상 연속으로 나온 문자열.
