@@ -1,0 +1,143 @@
+[ 문제 ]
+'''
+문자열 s가 매개변수로 주어집니다. s에서 한 번만 등장하는 문자를 사전 순으로 정렬한 문자열을 return 하도록 solution 함수를 완성해보세요. 
+한 번만 등장하는 문자가 없을 경우 빈 문자열을 return 합니다.
+0 < s의 길이 < 1,000
+s는 소문자로만 이루어져 있습니다.
+s	            result
+"abcabcadc"	  "d"
+"abdc"	      "abcd"
+"hello"	      "eho"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 와 왤케 모르겠지......?
+import java.util.*;
+class Solution {
+    public String solution(String s) {
+        Map<Character, Integer> map = new HashMap<>(); // 자바는 딕셔너리 아니고 Map
+        
+        // 알파벳 별 개수 세기
+        for(int i=0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            map.put(c, map.getOrDefault(c, 0)+1); // 키 c가 있으면 그 값을 가져오고, 없으면 0을 대신 써라.
+        }
+        
+        // StringBuilder에도 HashMap에도 정렬 기능이 없어 별도의 그릇 생성
+        List<Character> list = new ArrayList<>();
+        for(Map.Entry<Character, Integer> entry : map.entrySet()) { // map에 들어있는 Entry를 하나씩 꺼내서 entry라는 변수에 담아라.
+            if (entry.getValue() ==1)
+                list.add(entry.getKey());
+        }
+        
+        Collections.sort(list); // 정렬
+        
+        StringBuilder result = new StringBuilder(); 
+        for (char c : list)
+            result.append(c);
+        
+        return result.toString();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+// 내 풀이보다 아래가 더 간단해 보인다.
+import java.util.*;
+class Solution {
+    public String solution(String s) {
+        char[] chars = s.toCharArray();
+        Map<Character, Integer> charMap = new HashMap();
+
+        for(char c : chars){
+            charMap.put(c, charMap.getOrDefault(c, 0) +1);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for(char c : charMap.keySet()){ // key값을 꺼냈을 때
+            if (charMap.get(c) == 1){   // 해당 value가 1이라면
+                sb.append(c);
+            }
+        }
+        char[] charArr = sb.toString().toCharArray();
+        Arrays.sort(charArr);
+        return new String(charArr); // char 배열을 String으로 만들기 위해 생성자 호출
+    }
+}
+
+[ 타 풀이 2 ]
+// GPT가 알려준 TreeMap 코드
+import java.util.*;
+class Solution {
+    public String solution(String s) {
+        // TreeMap: key가 자동으로 사전 순 정렬됨
+        Map<Character, Integer> map = new TreeMap<>();
+
+        // 1. 문자별 등장 횟수 세기
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+
+        // 2. 한 번만 등장한 문자만 이어 붙이기
+        StringBuilder result = new StringBuilder();
+        for (char c : map.keySet()) {
+            if (map.get(c) == 1) {
+                result.append(c);
+            }
+        }
+
+        return result.toString();
+    }
+}
+
+[ 타 풀이 3 ]
+int[] alpha = new int[26]; // 소문자 개수 26개
+
+for(char c : s.toCharArray()){
+    alpha[c - 'a']++; // 배열 인덱스를 이용해 알파벳 등장 횟수 카운트
+}
+
+StringBuilder answer = new StringBuilder();
+
+for(int i = 0; i < 26; i++){ // 'a'부터 'z'순서대로 확인 중이니 정렬 필요 X
+    if(alpha[i] == 1){
+        answer.append((char)(i + 'a')); // 숫자 -> 문자 변환을 위해 'a'를 더함. 산술연산이 일어나면 자동으로 int가 되어 (char) 필요.
+    }
+}
+return answer.toString();
+
+// 첫 for문에서 'a'를 뺀 이유는 결과가 0~25로 배열 인덱스로 딱 맞기 때문.
+// 'a' - 'a' = 0
+// 'b' - 'a' = 1
+// 'c' - 'a' = 2
+
+// s = "abac"이면 alpha = [2, 1, 1, 0, 0, ...]
+c	  c - 'a'	  alpha 변화
+'a'	  0	      alpha[0] = 1
+'b'	  1	      alpha[1] = 1
+'a'	  0	      alpha[0] = 2
+'c'	  2	      alpha[2] = 1
+//=====================================================================
+
+[ 메모 ]
+1. StringBuilder에도 List에도 Set에도 정렬 메서드가 없음...
+
+2. 내 풀이의 List 부분 GPT가 알려준 건데 뭔 뜻인가 살펴보자.
+  Map은 key-value의 쌍들의 집합이었음. 그래서 Map은 하나의 묶음을 Map.Entry<key타입, value타입> 이렇게 표현함.
+  map.entrySet(): map 안에 있는 모든 (key, value)쌍을 모아 Set으로 반환해라.
+                  [
+                    ('a', 2),
+                    ('b', 1),
+                    ('c', 3)
+                  ]
+
+3. toCharArray(): 문자열을 문자 배열 char[]로 바꿈. charAt(i)를 쓰는 것과 같음.
+                  "abc".toCharArray() -> ['a', 'b', 'c']
+
+4. keySet(): Map에 들어있는 key값만 꺼냄. 반환 타입 Set<K>.
+             map = {a=2, b=1, c=3} 이면 map.keySet() → ['a', 'b', 'c']
+             반대로 Map의 value를 꺼내는 건 get().
+
+5. Map을 쓰는데 정렬이 필요하면 TreeMap. 트리맵은 내부적으로 항상 key를 정렬된 상태로 유지하는 트리!
