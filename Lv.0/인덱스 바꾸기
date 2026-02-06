@@ -1,0 +1,45 @@
+[ 문제 ]
+'''
+문자열 my_string과 정수 num1, num2가 매개변수로 주어질 때, 
+my_string에서 인덱스 num1과 인덱스 num2에 해당하는 문자를 바꾼 문자열을 return 하도록 solution 함수를 완성해보세요.
+num1 ≠ num2
+my_string	num1	num2	result
+"hello"	  1	    2	    "hlelo"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*; // Arrays는 여기에
+import java.util.stream.*; // stream()과 collect()는 여기에 있어 둘 다 import 필요.
+class Solution {
+    public String solution(String my_string, int num1, int num2) {
+        String[] sArr = my_string.split("");
+        String box = sArr[num1];
+        
+        sArr[num1] = sArr[num2];
+        sArr[num2] = box;
+        
+        return Arrays.stream(sArr)
+                     .collect(Collectors.joining());
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+String answer = "";
+char[] ch = my_string.toCharArray(); // split()보다 이 풀이가 더 빠르다고 함.
+
+ch[num1] = my_string.charAt(num2);
+ch[num2] = my_string.charAt(num1);
+
+answer = String.valueOf(ch); // 여기에 바로 넣네?
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. 타 풀이를 보면 String.valueOf()에 char[]를 바로 넣었음.
+  결론부터 말하자면 그럼 char[] 원소들이 '하나의 문자열'로 합쳐짐!
+
+  String.valueOf()는 배열도 받을 수 있다는 사실. 하지만 문자열로 합쳐지는 건 char[] 뿐임.
+  -> 자바에서 문자열은 본질적으로 '문자들의 배열'이기 때문!
+  (int[], String[] 등의 다른 배열을 넣으면 주소 정보 문자열이라는 이상한 값이 나온다.)
