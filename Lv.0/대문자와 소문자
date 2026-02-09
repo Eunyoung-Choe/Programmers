@@ -1,0 +1,51 @@
+[ 문제 ]
+'''
+문자열 my_string이 매개변수로 주어질 때, 
+대문자는 소문자로 소문자는 대문자로 변환한 문자열을 return하도록 solution 함수를 완성해주세요.
+my_string	    result
+"cccCCC"	    "CCCccc"
+"abCdEfghIJ"	"ABcDeFGHij"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public String solution(String my_string) {
+        StringBuilder sb = new StringBuilder();
+        
+        for(int i=0; i<my_string.length(); i++) {
+            char ch = my_string.charAt(i);
+            
+            if (ch >= 'a') // 소문자이면 (처음에 아스키코드 값 97로 썼었는데 그냥 'a'라고 써도 됐었다는 점...
+                sb.append(Character.toUpperCase(ch));
+            else
+                sb.append(Character.toLowerCase(ch));
+        }
+        
+        return sb.toString();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+String answer = "";
+
+for(int i=0;i<s.length();i++){
+    if(s.charAt(i)>=97 && s.charAt(i)<=122){
+        answer += (char)(s.charAt(i)-32); // char가 산술연산을 하면 int형으로 변환되니 (char)로 형변환을 해준 모습
+    }
+    else if(s.charAt(i)>=65 && s.charAt(i)<=90){
+        answer += (char)(s.charAt(i)+32);
+    } 
+    else {
+        answer += s.charAt(i);
+    }
+}
+
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. char는 기본형이라 메서드가 없으니 대소문자 변환 시 Character 클래스의 static 메서드를 사용함.
+  그래서 Character.toLowerCase(ch)이라 쓴 것.
