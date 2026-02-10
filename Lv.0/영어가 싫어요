@@ -1,0 +1,78 @@
+[ 문제 ]
+'''
+영어가 싫은 머쓱이는 영어로 표기되어있는 숫자를 수로 바꾸려고 합니다. 
+문자열 numbers가 매개변수로 주어질 때, numbers를 정수로 바꿔 return 하도록 solution 함수를 완성해 주세요.
+numbers는 소문자로만 구성되어 있습니다.
+numbers는 "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" 들이 공백 없이 조합되어 있습니다.
+1 ≤ numbers의 길이 ≤ 50
+"zero"는 numbers의 맨 앞에 올 수 없습니다.
+numbers	                                result
+"onetwothreefourfivesixseveneightnine"	123456789
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 악 왜 replace를 계속 누적할 생각을 못했지...?
+class Solution {
+    public long solution(String numbers) {
+        // replace는 둘다 char이던가, 둘다 String이어야 함!
+        numbers = numbers.replace("zero", "0")
+                         .replace("one", "1")
+                         .replace("two", "2")
+                         .replace("three", "3")
+                         .replace("four", "4")
+                         .replace("five", "5")
+                         .replace("six", "6")
+                         .replace("seven", "7")
+                         .replace("eight", "8")
+                         .replace("nine", "9");
+        
+        long result = Long.parseLong(numbers);
+        return result;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+// 오 깔끔하다ㄷㄷ
+String[] numbers_arr = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+
+for (int i = 0; i < numbers_arr.length; i++) {
+    numbers = numbers.replaceAll(numbers_arr[i], String.valueOf(i));
+}
+
+long answer = Long.parseLong(numbers);
+return answer;
+
+[ 타 풀이 2 ]
+import java.util.Map;
+class Solution {
+    // 이 클래스 내에서만 쓰는, 하나만 존재하는 내용 변경 불가한 Map 생성
+    private static final Map<String, Integer> CONTAINS = Map.of("zero", 0, "one", 1, "two", 2,"three", 3, "four", 4, "five", 5, "six", 6, "seven", 7, "eight", 8, "nine", 9);
+    
+    public long solution(String numbers) {
+        StringBuilder answer = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
+
+        for (String s : numbers.split("")) { // 한 글자씩
+            builder.append(s);   // 추가하다가
+            if (CONTAINS.containsKey(builder.toString())) { // 단어가 완성되는 순간 숫자로 바꿈.
+                answer.append(CONTAINS.get(builder.toString()));
+                builder = new StringBuilder(); // 빌더 초기화 (기존 객체를 비운 게 아니라 이전 빌더와 다른 주소에 새로운 객체 생성)
+            }
+        }
+        return Long.parseLong(answer.toString());
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. 처음에 StringBuilder 만들어서 append 할 때 replace("zero", 0) 이렇게 썼었는데, 이렇게 타입 다른 건 replace 메서드에서 불가함.
+  둘 다 char이던가, 둘 다 String이던가만 가능함!
+
+2. 내 풀이 막줄에서 long result = Integer.parseInt(numbers);라고 써보니까 통과되지 않는 케이스가 있었음.
+  이 문제의 경우 숫자 범위가 int를 넘는 테스트 케이스가 존재하기 때문. 파싱하는 순간 이미 int 범위를 넘으면 터짐.
+
+3. Map.of(): put()이 불가한 불변 Map
+
+4. containsKey(): Map에 이 key가 존재하는지 true/false로 알려주는 Map 전용 메서드
