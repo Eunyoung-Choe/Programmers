@@ -1,0 +1,50 @@
+[ 문제 ]
+'''
+정수 배열 array와 정수 n이 매개변수로 주어질 때, 
+array에 들어있는 정수 중 n과 가장 가까운 수를 return 하도록 solution 함수를 완성해주세요.
+가장 가까운 수가 여러 개일 경우 더 작은 수를 return 합니다.
+array        	n	  result
+[3, 10, 28]	  20	28
+[10, 11, 12]	13	12
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public int solution(int[] array, int n) {
+        int answer = array[0];
+        int minus = Math.abs(n - array[0]);
+        
+        for (int i=1; i<array.length; i++) {
+            if (Math.abs(n - array[i]) < minus) {
+                minus = Math.abs(n - array[i]);
+                answer = array[i];
+            }
+            
+            // 가장 가까운 수가 여러 개일 때 더 작은 수를 저장
+            if (Math.abs(n - array[i]) == minus) {
+                answer = (array[i] < answer) ? array[i] : answer;
+            }
+        }
+        
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+import java.util.*;
+class Solution {
+    public int solution(int[] array, int n) {
+        int answer = 0;
+        Arrays.sort(array);   // 정렬할 생각을 못 했다...!
+        for(int i = 1 ; i < array.length ; i++){
+            if(Math.abs(n-array[0]) > Math.abs(n-array[i])){
+                array[0] = array[i];
+            }
+        }
+        answer = array[0];
+        return answer;
+    }
+}
+//=====================================================================
