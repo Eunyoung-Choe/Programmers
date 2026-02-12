@@ -1,0 +1,90 @@
+[ 문제 ]
+'''
+문자열 my_string이 매개변수로 주어집니다. 
+my_string에서 중복된 문자를 제거하고 하나의 문자만 남긴 문자열을 return하도록 solution 함수를 완성해주세요.
+my_string은 대문자, 소문자, 공백으로 구성되어 있습니다.
+대문자와 소문자를 구분합니다.
+공백(" ")도 하나의 문자로 구분합니다.
+중복된 문자 중 가장 앞에 있는 문자를 남깁니다.
+my_string          	result
+"people"	          "peol"
+"We are the world"	"We arthwold"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public String solution(String my_string) {
+        StringBuilder sb = new StringBuilder(my_string);
+        
+        // StringBuilder에서 요소가 삭제되었을 때 인덱스가 앞당겨진다는 걸 간과했다,,
+        for (int i=0; i<sb.length(); i++) {
+            for (int j=i+1; j<sb.length(); j++) {
+                if (sb.charAt(j) == sb.charAt(i)) {
+                    sb.deleteCharAt(j);
+                    j--;   // 다시 같은 인덱스를 검사해야 해서.
+                }
+            }
+        }
+        
+        return sb.toString();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+import java.util.*;
+class Solution {
+    public String solution(String my_string) {
+        String[] answer = my_string.split("");
+        Set<String> set = new LinkedHashSet<String>(Arrays.asList(answer));
+
+        return String.join("", set);
+    }
+}
+
+[ 타 풀이 2 ]
+class Solution {
+    public String solution(String my_string) {
+        String answer = "";
+
+        for(int i=0; i<my_string.length(); i++){
+            if(i == my_string.indexOf(my_string.charAt(i))) // indexOf()의 특징을 활용한 풀이
+                answer += my_string.charAt(i);
+        }
+
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. Set에도 종류가 있음. 이때까지 나온 건 HashSet, TreeSet.
+  LinkedHashSet: 중복 불가, '입력 순서 유지'
+
+2. Set은 Collection 타입만 받을 수 있음. 근데 배열은 Collection이 아니라서 Collection으로 바꾸기 위한 다리로 Arrays.asList()를 쓴 것.
+  List 안 쓰고 일일이 넣는 건 아래처럼.
+  Set<String> set = new LinkedHashSet<>();
+  for (String s : answer) {
+      set.add(s);
+  }
+
+3. String.join(구분자, 문자열들): 여러 문자열을 하나로 이어 붙이는 메서드. 배열을 받는 버전, Collection을 받는 버전 2가지임.
+  Set<String> set = Set.of("p", "e", "o", "l");
+  String result = String.join("", set);  // "peol"
+
+  댓글에 String.join()에 Collection이 들어가는 게 가능한 줄 몰랐다는 말이 많았는데 자세히 알아보자.
+  상속 관계를 보면, Collection은 Iterable임.
+  Iterable
+     ↑
+  Collection
+     ↑
+  List / Set / LinkedHashSet / HashSet ...
+
+  즉, Set<String> set은 Iterable<String>이기도 함.
+  이전 문제들에서 Iterable은 for-each로 하나씩 꺼낼 수 있는 기능이었음. 
+  따라서 Iterable을 받는 String.join()에 Collection이 들어갈 수 있음.
+
+4. 타 풀이 2에서 indexOf()를 쓴 이유는 이 메서드는 '앞 인덱스를 우선으로 return'하기 때문!
+  뒤에서 중복되는 글자가 나와도 앞 인덱스와의 불일치로 인식해 무시됨.
