@@ -1,0 +1,57 @@
+[ 문제 ]
+'''
+1부터 13까지의 수에서, 1은 1, 10, 11, 12, 13 이렇게 총 6번 등장합니다. 
+정수 i, j, k가 매개변수로 주어질 때, i부터 j까지 k가 몇 번 등장하는지 return 하도록 solution 함수를 완성해주세요.
+1 ≤ i < j ≤ 100,000
+0 ≤ k ≤ 9
+i	  j	  k	  result
+1	  13	1	  6
+10	50	5	  5
+3	  10	2	  0
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 어케 푸나 막막했는데 문득 떠오른 풀이ㅋ
+class Solution {
+    public int solution(int i, int j, int k) {
+        int answer = 0;
+        
+        for (int num=i; num<=j; num++) {
+            char[] chArr = String.valueOf(num).toCharArray(); // 11이면 ['1', '1']
+            
+            for (char c : chArr) {
+                if (c == (char) '0' + k) answer++; // char와 int를 비교하는 식을 잘못 썼었다..!
+            }
+        }
+        
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+// 성능과 별개로 풀이가 신박하다!!
+String str = "";
+for(int a = i; a <= j; a++) {
+    str += a+"";
+}
+
+return str.length() - str.replace(k+"", "").length();
+
+[ 타 풀이 2 ]
+int answer = 0;
+
+for (int num = i; num <= j; num++){
+    int tmp = num;
+    while (tmp != 0){
+        if (tmp % 10 == k)
+            answer++;
+        tmp /= 10;
+    }
+}
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. 내 풀이에서 처음에 char == int 이렇게 비교해버려서 에러남. 비교법을 잘 기억하자.
