@@ -1,0 +1,55 @@
+[ 문제 ]
+'''
+문자열 before와 after가 매개변수로 주어질 때, 
+before의 순서를 바꾸어 after를 만들 수 있으면 1을, 만들 수 없으면 0을 return 하도록 solution 함수를 완성해보세요.
+0 < before의 길이 == after의 길이 < 1,000
+before와 after는 모두 소문자로 이루어져 있습니다.
+before	  after	    result
+"olleh"	  "hello"	  1
+"allpe"	  "apple"	  0
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 쩜 잘 푼 듯ㅋ
+import java.util.Arrays;
+class Solution {
+    public int solution(String before, String after) {
+        char[] beArr = before.toCharArray();
+        char[] afArr = after.toCharArray();
+        
+        Arrays.sort(beArr);
+        Arrays.sort(afArr);
+        
+        return Arrays.equals(beArr, afArr) ? 1 : 0;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 1 ]
+// before의 철자에 해당하는 걸 after에서 한 개씩 지워가는 풀이. 전부 지워지면 구성이 똑같은 것.
+for(int i = 0; i < before.length(); i++){
+    after = after.replaceFirst(before.substring(i,i+1),"");
+}
+return after.length() == 0? 1: 0;
+
+[ 타 풀이 2 ]
+import java.util.Arrays;
+class Solution {
+    public int solution(String before, String after) {
+        char[] a = before.toCharArray();
+        char[] b = after.toCharArray();
+        Arrays.sort(a);
+        Arrays.sort(b);
+
+        return new String(a).equals(new String(b)) ? 1 :0; // String은 char들의 연속이니 char[]를 String 생성자에 넣은 모습.
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. Arrays.equals(배열1, 배열2): 배열끼리 내용 같은지 비교 (객체니까 == 안 됨.)
+
+2. replaceFirst(찾을 문자열, 바꿀 내용): 해당 문자열을 '처음 한 번만' 찾아서 바꿈.
+  참고로 replace()는 char, String 둘 다 받지만, replaceFirst()와 replaceAll()은 String만 받음!
+  왜냐면 후자는 정규식 기반이기 때문이라고. (replaceAll("[0-9]", "") 이런 거)
