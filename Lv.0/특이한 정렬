@@ -1,0 +1,65 @@
+[ 문제 ]
+'''
+정수 n을 기준으로 n과 가까운 수부터 정렬하려고 합니다. 
+이때 n으로부터의 거리가 같다면 더 큰 수를 앞에 오도록 배치합니다. 
+정수가 담긴 배열 numlist와 정수 n이 주어질 때 numlist의 원소를 n으로부터 가까운 순서대로 정렬한 배열을 return하도록 solution 함수를 완성해주세요.
+numlist는 중복된 원소를 갖지 않습니다.
+numlist	            n	  result
+[1, 2, 3, 4, 5, 6]	4   [4, 5, 3, 6, 2, 1]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 에... sorted에 이런 기능이...
+import java.util.*;
+import java.util.stream.*;
+class Solution {
+    public int[] solution(int[] numlist, int n) {
+        return Arrays.stream(numlist)
+                     .boxed() // Comparator를 쓰려면 객체화가 필요함!
+                     .sorted((a, b) -> {   // a와 b 중 누가 앞에 와야 하는지 숫자로 대답하는 함수
+                         int diffA = Math.abs(a - n);
+                         int diffB = Math.abs(b - n);
+                         
+                         if (diffA != diffB) return diffA - diffB; // 오름차순 정렬
+                         
+                         return b - a; // 내림차순 정렬 (거리가 같을 땐 큰 num을 반환해야 하니까)
+                     })
+                     .mapToInt(Integer::intValue) // 문제 반환 타입이 int[]니까 다시 기본 타입으로 변환
+                     .toArray();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+// 버블 정렬
+int size = numlist.length;
+
+for(int i=0; i<size-1; i++){
+    for(int k=i+1; k<size; k++){
+        int a = (numlist[i] - n) * (numlist[i] > n ? 1 : -1); // Math.abs()를 안 쓰고 직접 계산한 형태
+        int b = (numlist[k] - n) * (numlist[k] > n ? 1 : -1);
+
+        if(a > b || (a == b && numlist[i] < numlist[k])){ 
+            int temp = numlist[i];   // swap 하는 과정
+            numlist[i] = numlist[k];
+            numlist[k] = temp;
+        }
+    }
+}
+return numlist;
+//=====================================================================
+
+[ 메모 ]
+1. sorted((a,b)~: 값을 겹쳐서 2개씩 넘김. [1,2,3,4]이면 (1,2)비교, (2,3)비교, (3,4)비교 이렇게.
+
+2. 내 풀이의 sorted() 내용은 어떻게 정렬되는 것인가? 우선 Comparator 규정을 알아야 함.
+  return 값이 음수 -> a가 앞
+              0   -> 순서 유지
+              양수 -> b가 앞
+  예를 들어, diffA = 1, diffB = 3이면 return이 -2니까 a가 앞. 이런 식으로 작동하는 것임.
+  참고로 이전에 Integer.compare()라는 비슷한 류의 메서드도 있었음. 두 정수를 비교해 -1, 0, 1 중 하나를 반환하는 메서드.
+
+3. 그럼 내 풀이 boxed()는 왜 필요한 걸까? 바로 sorted() 하면 안 되나?
+  Yes. 안 됨. Comparator라는 것 자체가 Comparator<T>, 즉 '객체(T)'를 비교하는 도구라서!
+  그래서 boxed()로 Stream<Integer>로 바꾸어 준 거임.
