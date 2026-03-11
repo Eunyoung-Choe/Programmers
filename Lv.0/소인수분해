@@ -1,0 +1,62 @@
+[ 문제 ]
+'''
+소인수분해란 어떤 수를 소수들의 곱으로 표현하는 것입니다. 예를 들어 12를 소인수 분해하면 2 * 2 * 3 으로 나타낼 수 있습니다. 
+따라서 12의 소인수는 2와 3입니다. 
+자연수 n이 매개변수로 주어질 때 n의 소인수를 오름차순으로 담은 배열을 return하도록 solution 함수를 완성해주세요.
+2 ≤ n ≤ 10,000
+n	    result
+12	  [2, 3]
+17	  [17]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 리스트 배열화 아직도 틀리면 어쩌잔 말이냐!!!!!!
+import java.util.*;
+class Solution {
+    public int[] solution(int n) {
+        List<Integer> answer = new ArrayList<>();
+        
+        int num = n; // 여기선 원본 보존 안 해도 되니까 그냥 n으로 바로 쓸 걸
+        
+        for(int i=2; i<=num; i++) {
+            if (num % i == 0) {
+                answer.add(i);
+                
+                while(num % i == 0) {
+                    num /= i;
+                }
+            }
+        }
+        
+        return answer.stream()
+                     .mapToInt(i -> i)
+                     .toArray();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+import java.util.LinkedHashSet;
+class Solution {
+    public int[] solution(int n) {
+        LinkedHashSet<Integer> primeNumbers = new LinkedHashSet<>();
+
+        int i = 2;
+        while (n != 0 && i <= n) {
+            if (n % i == 0) {
+                primeNumbers.add(i);
+                n /= i;
+            } else {
+                i++;
+            }
+        }
+
+        return primeNumbers.stream().mapToInt(Integer::intValue).toArray();
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. 타 풀이에서 LinkedHashSet을 쓴 이유는 이건 입력 순서가 유지되기 때문. HashSet은 순서 보장 X.
+  TreeSet을 썼어도 맞는 답. 근데 여기선 작은 수부터 차례로 시작하니까 매번 정렬하는 TreeSet보단 LinkedHashSet이 더 가볍고 적합.
