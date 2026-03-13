@@ -1,0 +1,56 @@
+[ 문제 ]
+'''
+정수 배열 numbers가 매개변수로 주어집니다. 
+numbers의 원소 중 두 개를 곱해 만들 수 있는 최댓값을 return하도록 solution 함수를 완성해주세요.
+0 ≤ numbers의 원소 ≤ 10,000
+2 ≤ numbers의 길이 ≤ 100
+numbers	                result
+[1, 2, 3, 4, 5]	        20
+[0, 31, 24, 10, 1, 9]	  744
+'''
+//=====================================================================
+
+[ 내 풀이 1 ]
+import java.util.Arrays;
+class Solution {
+    public int solution(int[] numbers) {
+        Arrays.sort(numbers);
+        return numbers[numbers.length-1] * numbers[numbers.length-2];
+    }
+}
+
+[ 내 풀이 2 ]
+// 다른 사람 풀이 보고 정렬 쓰면 코테에선 성능 안 나올 수 있다길래 다시 풀어봤는데 이게 맞나...?
+class Solution {
+    public int solution(int[] numbers) {
+        int num1 = numbers[0];
+        int num2 = numbers[1];
+        
+        for (int i=2; i<numbers.length; i++) {
+            if (numbers[i] > num1 || numbers[i] > num2) {
+                if (num1 < num2) num1 = numbers[i];
+                else num2 = numbers[i];
+            }
+        }
+        
+        return num1 * num2;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+int max = numbers[0];
+int prev = 0;
+
+for(int i=1; i<numbers.length; i++) {
+    if(max < numbers[i]) {
+        prev = max;      
+        max = numbers[i];
+    }
+    else if(prev < numbers[i]) {
+            prev = numbers[i];
+    }
+}
+
+return prev*max;
+//=====================================================================
