@@ -1,0 +1,62 @@
+[ 문제 ]
+'''
+정수가 담긴 배열 numbers와 문자열 direction가 매개변수로 주어집니다. 
+배열 numbers의 원소를 direction방향으로 한 칸씩 회전시킨 배열을 return하도록 solution 함수를 완성해주세요.
+3 ≤ numbers의 길이 ≤ 20
+direction은 "left" 와 "right" 둘 중 하나입니다.
+numbers	                    direction	  result
+[1, 2, 3]	                  "right"	    [3, 1, 2]
+[4, 455, 6, 4, -1, 45, 6]	  "left"	    [455, 6, 4, -1, 45, 6, 4]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public int[] solution(int[] numbers, String direction) {
+        int[] answer = new int[numbers.length];
+
+        switch (direction) {
+            case "right":
+                answer[0] = numbers[numbers.length-1];
+                
+                for (int i=1; i<numbers.length; i++) {
+                    answer[i] = numbers[i-1];
+                }
+                break;
+            
+            case "left":
+                answer[answer.length-1] = numbers[0];
+                
+                for (int i=0; i<numbers.length-1; i++) {
+                    answer[i] = numbers[i+1];
+                }
+                break;
+        }
+    
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+int length = numbers.length;
+int[] answer = new int[length];
+
+int direct = "right".equals(direction) ? 1 : -1; // 오 방향 설정을 이렇게...!!
+
+for (int i = 0; i < length; i++)
+    answer[i] = numbers[(i - direct + length) % length];
+
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. 변수 값 설정에서 삼항 연산자를 쓸 수 있다는 생각을 잘 못하는 것 같다ㄱ-
+
+2. 다른 문제 때도 그렇고 배열의 처음으로 돌아오는 경우엔 %length 계산을 하는 듯.
+
+3. 타 풀이자는 저 수식을 어떻게 생각해 낸 걸까.
+  먼저 right 방향으로 민다고 하면 answer와 numbers 인덱스의 관계는 i-1이 됨.
+  그런데 for문에서 i=0이면 i-1에서 음수가 되는데, 0번째 값은 answer 배열의 맨 뒤로 보내야 하잖음? 그래서 length 만큼 +.
+
+  배열 회전에선 (i + k) % n이나 (i - k + n) % n이 대부분이라고.
