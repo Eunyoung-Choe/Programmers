@@ -1,0 +1,121 @@
+[ 문제 ]
+'''
+머쓱이는 구슬을 친구들에게 나누어주려고 합니다. 
+구슬은 모두 다르게 생겼습니다. 
+머쓱이가 갖고 있는 구슬의 개수 balls와 친구들에게 나누어 줄 구슬 개수 share이 매개변수로 주어질 때, 
+balls개의 구슬 중 share개의 구슬을 고르는 가능한 모든 경우의 수를 return 하는 solution 함수를 완성해주세요.
+1 ≤ balls ≤ 30
+1 ≤ share ≤ 30
+구슬을 고르는 순서는 고려하지 않습니다.
+서로 다른 n개 중 m개를 뽑는 경우의 수 공식은 다음과 같습니다. n! / ((n-m)! * m!)
+share ≤ balls
+balls	share	result
+3	    2	    3
+5	    3	    1
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 나는 대체 언제 수식 고수가 되는가.
+// 팩토리얼은 int 크기를 넘어설 정도로 크기가 커질 수 있어 계산은 long에 담아야 함!!
+class Solution {
+    public int solution(int balls, int share) {
+        // for문에서 변수도 증감식도 여러 변수가 가능하나 조건식은 반드시 하나여야 한다고.
+        long answer = 1;
+        
+        for (int i=1; i<=share; i++) {
+            answer = answer * (balls - i + 1) / i;
+        }
+        
+        return (int)answer;
+}
+
+// 실패: 원래 아래처럼 메서드 하나 만들어서 했었는데 용량 이슈로 에러
+        // return fac(balls) / (fac(balls - share) * fac(share));
+    }
+    
+//     private int fac(int num) {
+//         if (num == 0) return 1;
+        
+//         int count = 1;
+        
+//         for (int i=2; i<=num; i++) {
+//             count *= i;
+//         }
+        
+//         return count;
+//    }
+//=====================================================================
+
+[ 타 풀이 1 ]
+// 내 풀이 수식을 재귀함수로 풀어낸 형태
+class Solution {
+    public long solution(int balls, int share) { // 여기도 long으로 바꿨네.
+        share = Math.min(balls - share, share);
+
+        if (share == 0)
+            return 1;
+
+        long result = solution(balls - 1, share - 1); // 본 메서드 자체를 재귀
+        result *= balls;
+        result /= share;
+
+        return result;
+    }
+}
+
+[ 타 풀이 2 ]
+double answer = 0;
+double u = 1, d = 1;
+
+for(int i=share; i>0; i--){
+    u *= balls;
+    d *= i;
+    balls--;
+}
+
+answer = u / d;
+return (int)answer;
+
+[ 타 풀이 3 ]
+import java.math.*;
+class Solution {
+    public BigInteger solution(int balls, int share) {
+        return factor(balls).divide(factor(balls - share)
+                            .multiply(factor(share)));
+    }
+
+    public BigInteger factor(int num){
+        BigInteger ret = new BigInteger("1"); // 초기값 1 (문자열로 써야 함.)
+        BigInteger from = new BigInteger("1");
+        BigInteger to = new BigInteger(String.valueOf(num));
+
+        for(BigInteger i = from; i.compareTo(to) <= 0; i = i.add(BigInteger.ONE)){ // 부등호가 아닌 compareTo()
+            ret = ret.multiply(i);  // ret *= i와 같은 의미임.
+        }
+        return ret;
+    }
+}
+//=====================================================================
+
+[ 메모 ]
+1. 내 풀이의 for문 내 식과 타 풀이는 힌트로 준 Combination(조합) 공식을 간단하게 정리해야 함.
+  일단 n! = n × (n-1) × (n-2) × ... × (n-m+1) × (n-m)! 이렇게 나타낼 수 있음. 분모에 있는 (n-m)!을 지우기 위함임.
+  약분하면 아래와 같이 됨.
+  (n × (n-1) × ... × (n-r+1))      Ex) 5 × 4 × 3
+  ----------------------------         ----------
+  (1 × 2 × 3 × ... × r)                1 x 2 x 3
+ 
+  이걸 분모, 분자 각각 1개씩 짝지음. (분모 1, 분자 n), (분모 2, 분자 n-1)... 이렇게. 
+  팩토리얼은 곱해지는 수가 금방 커지니까 터지는 걸 방지하기 위해 한 단계씩 나누면서 가려는 거임.
+
+2. BigInteger: 정수로 표현할 수 없는 '아주 큰' 정수를 다루는 클래스. 크게 제한은 없으나 속도는 느림.
+               int는 최대 21억, long은 최대 9경 정도인데 팩토리얼 계산 시엔 이 크기를 금방 넘는다고.
+
+               BigInteger는 기본 타입이 아닌 '객체'라서 +,-,*,/ 연산자를 못 씀...! 따라서 연산 메서드를 써야 함.
+               그래서 add(), multiply(), divide()가 있는 것. java.math 라이브러리에 있음.
+
+               BigInteger("1")로 문자열로 적은 걸 볼 수 있는데, 그럼 문자열을 저장하는 건가?
+               -> No. 일단 얘는 내부적으로 숫자를 '배열' 형태로 저장함.
+               12345678901234567890 이런 큰 수가 있으면 [12345, 67890, 12345, 67890] 이런 식으로 저장한다는 말임.
+               단지 문자열로 입력을 받아 BigInteger 객체를 생성하는 것일 뿐.
