@@ -1,0 +1,68 @@
+[ 문제 ]
+'''
+각에서 0도 초과 90도 미만은 예각, 90도는 직각, 90도 초과 180도 미만은 둔각 180도는 평각으로 분류합니다. 
+각 angle이 매개변수로 주어질 때 예각일 때 1, 직각일 때 2, 둔각일 때 3, 평각일 때 4를 return하도록 solution 함수를 완성해주세요.
+예각 : 0 < angle < 90
+직각 : angle = 90
+둔각 : 90 < angle < 180
+평각 : angle = 180
+0 < angle ≤ 180
+angle은 정수입니다.
+angle	  result
+70	    1
+91	    3
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public int solution(int angle) {
+        int answer = 0;
+        
+        if (angle < 90) answer++;
+        if (angle == 90) answer += 2;
+        if (angle > 90 && angle < 180) answer += 3;
+        if (angle == 180) answer += 4;
+        
+        return answer;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+// 쉬운 문제일 수록 다른 사람 풀이에 웃긴 사람들이 많이 보인다ㅋㅋㅋ
+int answer = 0;
+String gak = null;
+if(0 < angle && angle < 90){
+    gak = "예각";
+};
+if(angle == 90){
+    gak = "직각";
+};
+if(90 < angle && angle < 180){
+    gak = "둔각";
+};
+if(angle == 180){
+    gak = "평각";
+};
+
+
+switch(gak){
+    case "예각":
+        answer = 1;
+        break;
+    case "직각":
+        answer = 2;
+        break;
+    case "둔각":
+        answer = 3;
+        break;
+    case "평각":
+        answer = 4;
+        break;
+}
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. swith문 쓸 때 angle과 같은 int 타입이 case에 왔어야 했는데 angle < 90 이렇게 boolean을 넣어서 오류 났었음.
