@@ -1,0 +1,40 @@
+[ 문제 ]
+'''
+문자열 my_string과 정수 n이 매개변수로 주어질 때, 
+my_string에 들어있는 각 문자를 n만큼 반복한 문자열을 return 하도록 solution 함수를 완성해보세요.
+2 ≤ my_string 길이 ≤ 5
+2 ≤ n ≤ 10
+"my_string"은 영어 대소문자로 이루어져 있습니다.
+my_string	  n	    result
+"hello"	    3	    "hhheeellllllooo"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+class Solution {
+    public String solution(String my_string, int n) {
+        char[] chArr = my_string.toCharArray();
+        StringBuilder answer = new StringBuilder();
+        
+        for (char c : chArr) {
+            for (int i=0; i<n; i++)
+                answer.append(c);
+        }
+        
+        return answer.toString();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+StringBuilder sb = new StringBuilder();
+for(char c : my_string.toCharArray()){
+    sb.append((c + "").repeat(n));  // char로는 메서드를 못 쓰니까 + ""
+}
+return sb.toString();
+//=====================================================================
+
+[ 메모 ]
+1. String으로 만들 때 +""를 하면 성능이 좀 안 좋아짐.
+  String.valueOf()는 char에서 바로 String으로 만들어지는 간단한 과정인 것에 비해,
+  +""은 StringBuilder 생성 -> append -> toString 과정이 숨겨져 있는 거라고.
