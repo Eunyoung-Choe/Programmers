@@ -1,0 +1,45 @@
+[ 문제 ]
+'''
+문자열 my_string과 문자 letter이 매개변수로 주어집니다. 
+my_string에서 letter를 제거한 문자열을 return하도록 solution 함수를 완성해주세요.
+1 ≤ my_string의 길이 ≤ 100
+letter은 길이가 1인 영문자입니다.
+my_string과 letter은 알파벳 대소문자로 이루어져 있습니다.
+대문자와 소문자를 구분합니다.
+my_string	  letter	result
+"abcdef"	  "f"	    "abcde"
+"BCBdbe"	  "B"	    "Cdbe"
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public String solution(String my_string, String letter) {
+        char[] chArr = my_string.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        
+        for (char c : chArr) {
+            if (c != letter.charAt(0))
+                sb.append(c);
+        }
+        
+        return sb.toString();
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+// 나 ㄹㅇ 왜 저렇게 길게 풀었지ㄱ-
+String answer = "";
+answer = my_string.replace(letter, "");
+return answer;
+//=====================================================================
+
+[ 메모 ]
+1. replace()를 썼던 이전 문제들을 보니 인자가 2개, 3개인 경우가 있었는데 무슨 차이?
+  String에서의 replace()는 타 풀이처럼 인자가 2개 뿐임.
+
+  StringBuilder의 replace()는 인자가 3개. replace(시작점, 끝점, 어떤 문자열로 바꿀 건지)
+  Ex) StringBuilder sb = new StringBuilder("abcdef");
+      sb.replace(1, 4, "ZZ");  // aZZef - 영역을 지정해 해당 부분을 통째로 교체시키는 것
