@@ -1,0 +1,43 @@
+[ 문제 ]
+'''
+문자열 my_string이 매개변수로 주어집니다. 
+my_string을 거꾸로 뒤집은 문자열을 return하도록 solution 함수를 완성해주세요.
+1 ≤ my_string의 길이 ≤ 1,000
+my_string	  return
+"jaron"	    "noraj"
+'''
+//=====================================================================
+
+[ 내 풀이 1 ]
+class Solution {
+    public String solution(String my_string) {
+        StringBuilder answer = new StringBuilder();
+        
+        for (int i=my_string.length()-1; i>=0; i--) {
+            answer.append(my_string.charAt(i));
+        }
+        
+        return answer.toString();
+    }
+}
+
+[ 내 풀이 2 ]
+import java.util.stream.*;
+class Solution {
+    public String solution(String my_string) {
+        // IntStream은 int만 다룰 수 있음. char가 들어가면 int로 변환되어 들어가져서 mapToObj()로 써야 함.
+        return IntStream.range(0, my_string.length())
+                        .mapToObj(i -> my_string.charAt(my_string.length() - 1 - i)) // Character 객체
+                        .map(c -> String.valueOf(c))  // String::valueOf
+                        .collect(Collectors.joining());
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+// 풀고 나니 reverse()를 썼던 적이 있다는 게 떠올랐다...ㄱ-
+return new StringBuilder(myString).reverse().toString();
+//=====================================================================
+
+[ 메모 ]
+1. IntStream은 'int'를 다루니까 Character 객체로 만들 때 mapToObj()를 쓴 것.
