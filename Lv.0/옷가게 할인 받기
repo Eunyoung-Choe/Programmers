@@ -1,0 +1,53 @@
+[ 문제 ]
+'''
+머쓱이네 옷가게는 10만 원 이상 사면 5%, 30만 원 이상 사면 10%, 50만 원 이상 사면 20%를 할인해줍니다.
+구매한 옷의 가격 price가 주어질 때, 지불해야 할 금액을 return 하도록 solution 함수를 완성해보세요.
+10 ≤ price ≤ 1,000,000
+price는 10원 단위로(1의 자리가 0) 주어집니다.
+소수점 이하를 버린 정수를 return합니다.
+price	    result
+150,000	  142,500
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 굳이 switch로 풀고 싶었다...
+class Solution {
+    public int solution(int price) {
+        double sale = 0.0;
+        
+        int grade = (price >= 500000) ? 3 : // 이런 부등식도 switch의 case에 쓸 수 없음.
+                    (price >= 300000) ? 2 :
+                    (price >= 100000) ? 1 : 0;
+        
+        switch (grade) {  // 처음엔 위 부등식을 여기에 바로 넣었다가 boolean도 안 된대서 틀림,,
+            case 3:
+                sale = 0.2;
+                break;
+            case 2:
+                sale = 0.1;
+                break;
+            case 1:
+                sale = 0.05;
+                break;
+        }
+        
+        return (int) (price - (price * sale));
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+int answer = 0;
+
+if(price>=500000) return (int)(price*0.8);
+if(price>=300000) return (int)(price*0.9);
+if(price>=100000) return (int)(price*0.95);
+
+return price;
+//=====================================================================
+
+[ 메모 ]
+1. 할인율을 double 말고 float으로 선언하면 안 되나?
+  -> 해도 됨. 근데 0.0으로 쓰면 안 되고 0.2f 이렇게 f를 붙여야 사용할 수 있음. 안 붙이면 기본적으로 double이라 오류 남.
+     이전 다른 문제에서 설명 자세히 적었었음. float보다 double이 정밀도도 더 높음. 참고로 금융 계산에선 BigDecimal을 쓴다고.
