@@ -1,0 +1,71 @@
+[ 문제 ]
+'''
+첫 번째 분수의 분자와 분모를 뜻하는 numer1, denom1, 두 번째 분수의 분자와 분모를 뜻하는 numer2, denom2가 매개변수로 주어집니다. 
+두 분수를 더한 값을 기약 분수로 나타냈을 때 분자와 분모를 순서대로 담은 배열을 return 하도록 solution 함수를 완성해보세요.
+0 <numer1, denom1, numer2, denom2 < 1,000
+입출력 예
+numer1	denom1	numer2	denom2	result
+1	2	3	4	[5, 4]
+9	2	1	3	[29, 6]
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+// 이게 맞나...^^
+class Solution {
+    public int[] solution(int numer1, int denom1, int numer2, int denom2) {
+        int[] answer = new int[2];
+        
+        // 분모 최소공배수
+        int lcm = (denom1 * denom2) / gcd(denom1, denom2);
+        
+        // 분자 곱셈
+        numer1 *= (lcm / denom1);
+        numer2 *= (lcm / denom2);
+        
+        // 분자, 분모 덧셈
+        answer[0] = numer1 + numer2;
+        answer[1] = lcm;
+        
+        // 기약분수 처리
+        int g = gcd(answer[0], answer[1]);
+        answer[0] /= g;
+        answer[1] /= g;
+        
+        return answer;
+    }
+    
+    private int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+// 최소공배수를 안 구해도 되었구나...
+class Solution {
+    public int[] solution(int denum1, int num1, int denum2, int num2) {
+        int denum = denum1 * num2 + denum2 * num1;
+        int num = num1 * num2;
+
+        int gcd = getGCD(denum, num);
+
+
+        return new int[]{denum / gcd, num / gcd};
+    }
+
+    public int getGCD(int a, int b) { // gcd()를 재귀로 나타낸 경우. 내 풀이랑 똑같음.
+        if (a % b == 0) {
+            return b;
+        }
+
+        return getGCD(b, a%b);
+    }
+}
+
+//=====================================================================
