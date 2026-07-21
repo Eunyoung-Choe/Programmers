@@ -1,0 +1,45 @@
+[ 문제 ]
+'''
+연산 ⊕는 두 정수에 대한 연산으로 두 정수를 붙여서 쓴 값을 반환합니다. 예를 들면 다음과 같습니다.
+12 ⊕ 3 = 123
+3 ⊕ 12 = 312
+양의 정수 a와 b가 주어졌을 때, a ⊕ b와 2 * a * b 중 더 큰 값을 return하는 solution 함수를 완성해 주세요.
+단, a ⊕ b와 2 * a * b가 같으면 a ⊕ b를 return 합니다.
+1 ≤ a, b < 10,000
+입출력 예
+a	  b	  result
+2	  91	364
+91	2	  912
+'''
+//=====================================================================
+
+[ 내 풀이 ]
+import java.util.*;
+class Solution {
+    public int solution(int a, int b) {
+        StringBuilder sb = new StringBuilder(); // 여기에 바로 a 넣으면 안 됨!
+        sb.append(a);
+        sb.append(b);
+        
+        int sbInt = Integer.parseInt(sb.toString()); // toString() 꼭 거쳐가야 함.
+        
+        return Math.max(sbInt, 2*a*b);
+    }
+}
+//=====================================================================
+
+[ 타 풀이 ]
+int ab = Integer.parseInt(a + "" + b);
+if(2 * a * b <= ab) {
+    return ab;
+} else {
+    return 2 * a * b;
+}
+//=====================================================================
+
+[ 메모 ]
+1. StringBuilder 생성 시 문자가 아닌 숫자를 넣으면 해당 크기만큼 버퍼를 생성하겠다는 의미가 됨!
+  new StringBuilder(123) -> 문자 123개를 저장할 수 있는 빈 StringBuilder
+  그래서 String.valueOf()로 감싸 생성하던가 따로 append() 하던가 해야 함.
+
+2. StringBuilder는 바로 int로 못 만듦. toString() 거쳐야 함.
